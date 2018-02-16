@@ -10,6 +10,7 @@ import static org.junit.Assert.assertThat;
  * Тестирует объект класса Max.
  */
 public class MaxTest {
+    Max maxim = new Max();
     /**
      * Test whenFirstLessSecond.
      * Тестирует метод max.
@@ -18,7 +19,6 @@ public class MaxTest {
      */
     @Test
     public void whenFirstLessSecond() {
-        Max maxim = new Max();
         int result = maxim.max(1, 2);
         assertThat(result, is(2));
     }
@@ -31,7 +31,6 @@ public class MaxTest {
      */
     @Test
     public void whenSecondLessFirst() {
-        Max maxim = new Max();
         int result = maxim.max(3, 2);
         assertThat(result, is(3));
     }
@@ -44,8 +43,48 @@ public class MaxTest {
      */
     @Test
     public void whenFirstEqualSecond() {
-        Max maxim = new Max();
         int result = maxim.max(4, 4);
         assertThat(result, is(4));
+    }
+
+    /**
+     * Test whenFirstOfThreeNumbersMore.
+     * Тестирует метод Max с тремя параметрами.
+     * Max должен вернуть первое число.
+     */
+    @Test
+    public void whenFirstOfThreeNumbersMore() {
+        int result = maxim.max(6, 4, 2);
+        assertThat(result, is(6));
+    }
+    /**
+     * Test whenFirstOfThreeNumbersMore.
+     * Тестирует метод Max с тремя параметрами.
+     * Max должен вернуть второе число.
+     */
+    @Test
+    public void whenSecondofThreeNumbersMore() {
+        int result = maxim.max(3, 10, 1);
+        assertThat(result, is(10));
+    }
+    /**
+     * Test whenFirstOfThreeNumbersMore.
+     * Тестирует метод Max с тремя параметрами.
+     * Max должен вернуть третье число.
+     */
+    @Test
+    public void whenThirdOfThreeNumbersMore() {
+        int result = maxim.max(4, 8, 15);
+        assertThat(result, is(15));
+    }
+    /**
+     * Test whenFirstOfThreeNumbersMore.
+     * Тестирует метод Max с тремя равными параметрами.
+     * Max должен вернуть число 2.
+     */
+    @Test
+    public void whenThreeNumbersEquals() {
+        int result = maxim.max(2, 2, 2);
+        assertThat(result, is(2));
     }
 }

@@ -9,12 +9,23 @@ package ru.job4j.max;
  */
 public class Max {
     /**
-     * max
+     * max с двумя параметрами.
      * @param first первое сравниваемое число.
      * @param second второе сравниваемое число.
      * @return наибольшее число из двух сравниваемых чисел.
      */
     public int max(int first, int second) {
         return first >= second ? first : second;
+    }
+
+    /**
+     * max с тремя параметрами.
+     * @param first первое сравниваемое число.
+     * @param second второе сравниваемое число.
+     * @param third третье сравниваемое число.
+     * @return наибольшее из трех чисел.
+     */
+    public int max(int first, int second, int third) {
+        return this.max(this.max(first, second), third);
     }
 }
