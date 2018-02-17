@@ -5,6 +5,10 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class CounterTest {
+    /**
+     * Test whenSumEvenNumbersFromOneToTenThenThirty.
+     * Тестирует метод add класса Counter
+     */
     @Test
     public void whenSumEvenNumbersFromOneToTenThenThirty() {
         Counter counter = new Counter();
