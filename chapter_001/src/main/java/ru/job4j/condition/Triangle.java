@@ -61,7 +61,14 @@ public class Triangle {
      * @return boolean.
      */
     private boolean exist(double ab, double ac, double bc) {
-        return (ab != 0 && ac != 0 && bc != 0);
-
+        if (ab >= ac && ab >= bc) {
+            return ab < ac + bc;
+        } else {
+            if (ac >= ab && ac >= bc) {
+              return ac < ab + bc;
+            } else {
+                return bc < ab + ac;
+            }
+        }
     }
 }
