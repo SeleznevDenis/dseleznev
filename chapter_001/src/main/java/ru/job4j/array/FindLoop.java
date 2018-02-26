@@ -15,14 +15,13 @@ public class FindLoop {
      * @return индекс заданного для поиска числа, либо -1 если числа нет в массиве.
      */
     public int indexOf(int[] data, int el) {
-        int rsl = -1;
-
-        for (int index = 0; index < data.length; index++) {
-            if (data[index] == el) {
-                rsl = index;
+        int index = -1;
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == el) {
+                index = i;
                 break;
             }
         }
-        return rsl;
+        return index;
     }
 }

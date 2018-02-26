@@ -18,8 +18,8 @@ public class FindLoopTest {
     @Test
     public void ifMassivOfSixElementsFindIndexContainsEight() {
         int[] data = {1, 15, 14, 8, 22};
-        FindLoop findloop = new FindLoop();
-        int result = findloop.indexOf(data, 8);
+        FindLoop loop = new FindLoop();
+        int result = loop.indexOf(data, 8);
         assertThat(result, is(3));
     }
 
@@ -29,8 +29,8 @@ public class FindLoopTest {
     @Test
     public void ifMassivHasNotAFindNomber() {
         int[] data = {1, 3, 4};
-        FindLoop findloop = new FindLoop();
-        int result = findloop.indexOf(data, 5);
+        FindLoop loop = new FindLoop();
+        int result = loop.indexOf(data, 5);
         assertThat(result, is(-1));
     }
 }

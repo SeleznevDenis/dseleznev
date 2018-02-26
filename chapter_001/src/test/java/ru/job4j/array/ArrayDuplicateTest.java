@@ -19,8 +19,8 @@ public class ArrayDuplicateTest {
     public void whenRemoveDuplicatesThenArrayWithoutDuplicate() {
         String[] array = {"Привет", "Мир", "Привет", "Супер", "Мир"};
         String[] except = {"Привет", "Супер", "Мир"};
-        ArrayDuplicate arrayDuplicate = new ArrayDuplicate();
-        String[] result = arrayDuplicate.remove(array);
+        ArrayDuplicate duplicate = new ArrayDuplicate();
+        String[] result = duplicate.remove(array);
         assertThat(result, is(except));
     }
 

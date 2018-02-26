@@ -14,28 +14,26 @@ public class ArrayAddition {
      * @return отсортированный массив сложенный из первого и второго заданных.
      */
     public int[] addition(int[] a1, int[] a2) {
-
-        int[] result = new int[a1.length + a2.length];
-        int i = 0;
-        int j = 0;
-
-        for (int k = 0; k < result.length; k++) {
-            if (i < a1.length && j < a2.length) {
-                if (a1[i] <= a2[j]) {
-                    result[k] = a1[i];
-                    i++;
+        int[] a3 = new int[a1.length + a2.length];
+        int a1Index = 0;
+        int a2Index = 0;
+        for (int a3Index = 0; a3Index < a3.length; a3Index++) {
+            if (a1Index < a1.length && a2Index < a2.length) {
+                if (a1[a1Index] <= a2[a2Index]) {
+                    a3[a3Index] = a1[a1Index];
+                    a1Index++;
                 } else {
-                    result[k] = a2[j];
-                    j++;
+                    a3[a3Index] = a2[a2Index];
+                    a2Index++;
                 }
-            } else if (i < a1.length) {
-                result[k] = a1[i];
-                i++;
+            } else if (a1Index < a1.length) {
+                a3[a3Index] = a1[a1Index];
+                a1Index++;
             } else {
-                result[k] = a2[j];
-                j++;
+                a3[a3Index] = a2[a2Index];
+                a2Index++;
             }
         }
-        return result;
+        return a3;
     }
 }

@@ -16,9 +16,9 @@ public class TurnTest {
      */
     @Test
     public void whenTurnArrayWithEvenAmountOfElementsThenTurnedArray() {
-        int[] array = {1, 2, 3, 4, 5};
-        Turn turn = new Turn();
-        int[] result = turn.back(array);
+        int[] data = {1, 2, 3, 4, 5};
+        Turn array = new Turn();
+        int[] result = array.back(data);
         int[] expect = {5, 4, 3, 2, 1};
         assertThat(result, is(expect));
     }
@@ -28,9 +28,9 @@ public class TurnTest {
      */
     @Test
     public void whenTurnArrayWithOddAmountOfElementsThenTurnedArray() {
-        int[] array = {4, 1, 6, 2};
-        Turn turn = new Turn();
-        int[] result = turn.back(array);
+        int[] data = {4, 1, 6, 2};
+        Turn array = new Turn();
+        int[] result = array.back(data);
         int[] expect = {2, 6, 1, 4};
         assertThat(result, is(expect));
 

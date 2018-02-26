@@ -11,19 +11,19 @@ public class BubbleSort {
 
     /**
      * sort сортировка заданного массива, используя алгоритм сортировки пузырьком.
-     * @param array заданный массив.
+     * @param sorted заданный массив.
      * @return отсортированный от меньшего числа к большему массив.
      */
-    public int[] sort(int[] array) {
-        for (int arrayLength = array.length; arrayLength != 0; arrayLength--) {
-            for (int i = 0; i < arrayLength - 1; i++) {
-                if (array[i] > array[i + 1]) {
-                    int tmp = array[i];
-                    array[i] = array[i + 1];
-                    array[i + 1] = tmp;
+    public int[] sort(int[] sorted) {
+        for (int sortArea = sorted.length; sortArea != 0; sortArea--) {
+            for (int i = 0; i < sortArea - 1; i++) {
+                if (sorted[i] > sorted[i + 1]) {
+                    int oldArray = sorted[i];
+                    sorted[i] = sorted[i + 1];
+                    sorted[i + 1] = oldArray;
                 }
             }
         }
-        return array;
+        return sorted;
     }
 }

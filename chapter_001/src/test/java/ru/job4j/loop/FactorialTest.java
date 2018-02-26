@@ -11,8 +11,8 @@ public class FactorialTest {
      */
     @Test
     public void factorialOfNumberFive() {
-        Factorial factorial = new Factorial();
-        int result = factorial.calc(5);
+        Factorial factor = new Factorial();
+        int result = factor.calc(5);
         assertThat(result, is(120));
     }
 
@@ -22,8 +22,8 @@ public class FactorialTest {
      */
     @Test
     public void factorialOfNumberOne() {
-        Factorial factorial = new Factorial();
-        int result = factorial.calc(1);
+        Factorial factor = new Factorial();
+        int result = factor.calc(1);
         assertThat(result, is(1));
     }
 }

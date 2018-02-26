@@ -15,23 +15,22 @@ public class ArrayChar2 {
      * @return если origin содержит word то true, иначе false.
      */
     public boolean contains(String origin, String word) {
-        boolean result = true;
+        boolean done = true;
         char[] aOrigin = origin.toCharArray();
         char[] aWord = word.toCharArray();
-
-        for (int i = 0; i <= aOrigin.length - aWord.length; i++) {
-            for (int j = 0; j < aWord.length; j++) {
-               if (aOrigin[i + j] != aWord[j]) {
-                   result = false;
+        for (int aOriginIndex = 0; aOriginIndex <= aOrigin.length - aWord.length; aOriginIndex++) {
+            for (int aWordIndex = 0; aWordIndex < aWord.length; aWordIndex++) {
+               if (aOrigin[aOriginIndex + aWordIndex] != aWord[aWordIndex]) {
+                   done = false;
                    break;
                } else {
-                   result = true;
+                   done = true;
                }
             }
-            if (result) {
+            if (done) {
                 break;
             }
         }
-        return result;
+        return done;
     }
 }

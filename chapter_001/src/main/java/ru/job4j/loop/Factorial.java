@@ -14,10 +14,10 @@ public class Factorial {
      * @return факториал заданного числа.
      */
     public int calc(int n) {
-        int result = 1;
+        int factorial = 1;
         for (int i = 1; i <= n; i++) {
-            result *= i;
+            factorial *= i;
         }
-        return result;
+        return factorial;
     }
 }

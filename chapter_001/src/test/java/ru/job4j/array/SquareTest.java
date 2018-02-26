@@ -16,8 +16,8 @@ public class SquareTest {
      */
     @Test
     public void ifBoundEqualsFive() {
-        Square square = new Square();
-        int[] result = square.calculate(5);
+        Square arrSquares = new Square();
+        int[] result = arrSquares.calculate(5);
         int[] expect = {1, 4, 9, 16, 25};
         assertThat(result, is(expect));
     }

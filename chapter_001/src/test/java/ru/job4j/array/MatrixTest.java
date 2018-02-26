@@ -19,11 +19,11 @@ public class MatrixTest {
     public void ifSizeOfMultipledTableEqualsThree() {
         Matrix matrix = new Matrix();
         int[][] result = matrix.multiple(3);
-        int[][] expept = {
+        int[][] expect = {
                 {1, 2, 3},
                 {2, 4, 6},
                 {3, 6, 9}
         };
-        assertThat(result, is(expept));
+        assertThat(result, is(expect));
     }
 }
