@@ -7,14 +7,14 @@ package ru.job4j.professions;
  * @since 0.1
  */
 public class Engineer extends Profession {
+
     /**
      * Конструктор класса Engineer.
      * Инициализирует переменные name, и profession экземпляра класса.
      * @param name
      */
     public Engineer(String name) {
-        this.name = name;
-        this.profession = "Engineer";
+        super(name, "Engineer");
     }
 
     /**

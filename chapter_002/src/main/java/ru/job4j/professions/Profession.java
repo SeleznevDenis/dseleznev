@@ -12,6 +12,21 @@ public class Profession {
    String profession;
 
     /**
+     * Явно задаем дефолтный конструктор.
+     */
+   public Profession() {
+   }
+
+    /**
+     * Конструктор
+     * @param name - имя объекта.
+     * @param profession - профессия объекта.
+     */
+   public Profession(String name, String profession) {
+       this.name = name;
+       this.profession = profession;
+   }
+    /**
      * getName.
      * @return this.name.
      */
