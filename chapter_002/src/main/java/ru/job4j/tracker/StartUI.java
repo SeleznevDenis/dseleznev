@@ -70,8 +70,8 @@ public class StartUI {
         System.out.println("------------- Adding a new item -------------");
         String name = this.input.ask("Enter the item name : ");
         String desc = this.input.ask("Enter the item description : ");
-        long ItemDate = new Date().getTime();
-        Item item = new Item(name, desc, ItemDate);
+        long itemDate = new Date().getTime();
+        Item item = new Item(name, desc, itemDate);
         this.tracker.add(item);
         this.showItem(item);
         System.out.println("---------------- End adding -----------------");

@@ -33,6 +33,7 @@ public class Tracker {
      public void replace(String id, Item item) {
           for (int i = 0; i <= this.position; i++) {
               if (this.items[i].getId().equals(id)) {
+                  this.delete(item.getId());
                   this.items[i] = item;
                   break;
               }
@@ -79,13 +80,13 @@ public class Tracker {
      */
      public Item[] findByName(String key) {
          Item[] foundArr = new Item[this.position];
-         int foundArrIndex = 0;
+         int foundArrLength = 0;
          for (Item checked : this.items) {
              if (checked != null && checked.getName().equals(key)) {
-                 foundArr[foundArrIndex++] = checked;
+                 foundArr[foundArrLength++] = checked;
              }
          }
-         return Arrays.copyOf(foundArr, foundArrIndex + 1);
+         return Arrays.copyOf(foundArr, foundArrLength);
      }
 
     /**
