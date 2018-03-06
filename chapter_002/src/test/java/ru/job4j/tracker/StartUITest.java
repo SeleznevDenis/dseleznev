@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.StringJoiner;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertNull;
@@ -19,15 +21,16 @@ public class StartUITest {
 
     private final PrintStream stdout = System.out;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
-    private String menu = new StringBuilder()
-                                  .append("Menu:\r\n")
-                                  .append("0. Add new item\r\n")
-                                  .append("1. Show all items\r\n")
-                                  .append("2. Edit item\r\n")
-                                  .append("3. Delete item\r\n")
-                                  .append("4. Find item by id\r\n")
-                                  .append("5. Find items by name\r\n")
-                                  .append("6. Exit prigram\r\n")
+    private final String ln = System.lineSeparator();
+    private final String menu = new StringJoiner(ln)
+                                  .add("Menu:")
+                                  .add("0. Add new item")
+                                  .add("1. Show all items")
+                                  .add("2. Edit item")
+                                  .add("3. Delete item")
+                                  .add("4. Find item by id")
+                                  .add("5. Find items by name")
+                                  .add("6. Exit prigram")
                                   .toString();
 
     /**
@@ -96,15 +99,15 @@ public class StartUITest {
         assertThat(
                 new String(out.toByteArray()),
                 is(
-                        new StringBuilder()
-                                .append(menu)
-                                .append("---------------- All Items ------------------\r\n")
-                                .append("1 | test1 | Thu Jan 01 05:00:00 YEKT 1970\r\n")
-                                .append("testDesc1\r\n")
-                                .append("2 | test2 | Thu Jan 01 05:00:00 YEKT 1970\r\n")
-                                .append("testDesc2\r\n")
-                                .append("------------------- End ---------------------\r\n")
-                                .append(menu)
+                        new StringJoiner(ln)
+                                .add(menu)
+                                .add("---------------- All Items ------------------")
+                                .add("1 | test1 | Thu Jan 01 05:00:00 YEKT 1970")
+                                .add("testDesc1")
+                                .add("2 | test2 | Thu Jan 01 05:00:00 YEKT 1970")
+                                .add("testDesc2")
+                                .add("------------------- End ---------------------")
+                                .add(menu + ln)
                                 .toString()
                 )
         );
@@ -123,14 +126,14 @@ public class StartUITest {
         assertThat(
                 new String(out.toByteArray()),
                 is(
-                        new StringBuilder()
-                                .append(menu)
-                                .append("---------------- Show item ------------------\r\n")
-                                .append("Selected item : \r\n")
-                                .append("1 | test | Thu Jan 01 05:00:00 YEKT 1970\r\n")
-                                .append("testDesc\r\n")
-                                .append("---------------- Show item end --------------\r\n")
-                                .append(menu)
+                        new StringJoiner(ln)
+                                .add(menu)
+                                .add("---------------- Show item ------------------")
+                                .add("Selected item : ")
+                                .add("1 | test | Thu Jan 01 05:00:00 YEKT 1970")
+                                .add("testDesc")
+                                .add("---------------- Show item end --------------")
+                                .add(menu + ln)
                                 .toString()
                 )
         );
@@ -149,13 +152,13 @@ public class StartUITest {
         assertThat(
                 new String(out.toByteArray()),
                 is(
-                        new StringBuilder()
-                                .append(menu)
-                                .append("----------------Find items by name-----------\r\n")
-                                .append("1 | test | Thu Jan 01 05:00:00 YEKT 1970\r\n")
-                                .append("testDesc\r\n")
-                                .append("------------------- End ---------------------\r\n")
-                                .append(menu)
+                        new StringJoiner(ln)
+                                .add(menu)
+                                .add("----------------Find items by name-----------")
+                                .add("1 | test | Thu Jan 01 05:00:00 YEKT 1970")
+                                .add("testDesc")
+                                .add("------------------- End ---------------------")
+                                .add(menu + ln)
                                 .toString()
                 )
         );
