@@ -7,9 +7,9 @@ package ru.job4j.tracker;
  */
 public class StartUI {
 
-    private static final int EXIT = 6;
     private final Input input;
     private final Tracker tracker;
+    private int[] ranges;
 
     /**
      * Конструктор инициализирующий поля.
@@ -30,16 +30,14 @@ public class StartUI {
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         menu.fillActions();
+        ranges = menu.getNumberMenuItems();
         int key;
         do {
             System.out.println("Menu:");
             menu.show();
-            System.out.println("6. Exit prigram");
-            key = Integer.valueOf(this.input.ask("Select: "));
-            if (key != EXIT) {
-                menu.select(key);
-            }
-        } while (key != EXIT);
+            key = this.input.ask("Select: ", ranges);
+            menu.select(key);
+        } while (key != menu.getExitKey());
     }
 
     /**
@@ -47,6 +45,6 @@ public class StartUI {
      * @param args
      */
     public static void main(String[] args) {
-        new StartUI(new ConsoleInput(), new Tracker()).init();
+        new StartUI(new ValidateInput(), new Tracker()).init();
     }
 }

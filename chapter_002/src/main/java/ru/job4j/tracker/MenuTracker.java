@@ -44,13 +44,19 @@ class EditItem implements UserAction {
     }
 }
 
+/**
+ * @author Denis Seleznev (d.selezneww@mail.ru)
+ * @version $Id$
+ * @since 0.1
+ */
 public class MenuTracker {
 
     private Input input;
     private Tracker tracker;
-    private UserAction[] actions = new UserAction[6];
-
+    private UserAction[] actions = new UserAction[7];
+    private int ExitKey;
     /**
+     * Объект класса MenuTracker реализует меню.
      * Конструктор класса MenuTracker инициализирует поля input и tracker
      * @param input поток ввода.
      * @param tracker хранилище заявок.
@@ -70,6 +76,32 @@ public class MenuTracker {
        this.actions[3] = new DeleteItem();
        this.actions[4] = new FindItemById();
        this.actions[5] = new FindItemByName();
+       EXIT exit = new EXIT();
+       ExitKey = exit.key();
+       this.actions[6] = exit;
+    }
+
+    /**
+     * Возвращает ключ номер пункта выхода из меню.
+     * @return
+     */
+    public int getExitKey() {
+        return ExitKey;
+    }
+
+    /**
+     * Возвращает массив, содержащий ключи номера всех пунктов меню.
+     * @return
+     */
+    public int[] getNumberMenuItems() {
+        int[] numberMenuItems = new int[actions.length ];
+        int position = 0;
+        for (UserAction action : actions) {
+            if (action != null) {
+                numberMenuItems[position++] = action.key();
+            }
+        }
+        return Arrays.copyOf(numberMenuItems, position);
     }
 
     /**
@@ -118,6 +150,7 @@ public class MenuTracker {
      }
 
     /**
+     * Добавляет новую заявку в хранилище.
      * @author Denis Seleznev(d.selezneww@mail.ru)
      * @version $Id$
      * @since 0.1
@@ -153,6 +186,7 @@ public class MenuTracker {
     }
 
     /**
+     * Выводит в консоль поля всех заявок.
      * @author Denis Seleznev(d.selezneww@mail.ru)
      * @version $Id$
      * @since 0.1
@@ -187,6 +221,7 @@ public class MenuTracker {
     }
 
     /**
+     * Удаляет заявку.
      * @author Denis Seleznev(d.selezneww@mail.ru)
      * @version $Id$
      * @since 0.1
@@ -224,6 +259,7 @@ public class MenuTracker {
     }
 
     /**
+     * Ищет заявку по id.
      * @author Denis Seleznev(d.selezneww@mail.ru)
      * @version $Id$
      * @since 0.1
@@ -260,6 +296,7 @@ public class MenuTracker {
     }
 
     /**
+     * Ищет заявку по имени.
      * @author Denis Seleznev(d.selezneww@mail.ru)
      * @version $Id$
      * @since 0.1
@@ -291,6 +328,33 @@ public class MenuTracker {
          */
         public String info() {
             return String.format("%s. %s", this.key(), "Find items by name");
+        }
+    }
+
+    /**
+     * Реализует пункт выхода из меню. Позволяет получить ключ для выхода и строку с описанием пункта меню.
+     */
+    private class EXIT implements UserAction {
+        /**
+         * Возвращает заданное число - порядковый номер пункта меню.
+         * @return
+         */
+        public int key() {
+            return 6;
+        }
+        /**
+         * Метод не используется, сам выход из меню расположен в StartUI.
+         * @param input поток ввода.
+         * @param tracker хранилище.
+         */
+        public void execute(Input input, Tracker tracker) {
+        }
+        /**
+         * Возвращает строку с описание пункта меню.
+         * @return
+         */
+        public String info() {
+            return String.format("%s. %s", this.key(), "Exit prigram");
         }
     }
 }
