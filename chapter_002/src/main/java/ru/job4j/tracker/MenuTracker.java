@@ -8,19 +8,18 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-class EditItem implements UserAction {
-    /**
-     * Возвращает заданное число - порядковый номер пункта меню.
-     * @return
-     */
-    public int key() {
-        return 2;
+class EditItem extends BaseAction {
+
+    public EditItem(int key, String name) {
+        super(key, name);
     }
+
     /**
      * Редактирует заявку в хранилище tracker.
      * @param input поток ввода.
      * @param tracker хранилище.
      */
+    @Override
     public void execute(Input input, Tracker tracker) {
         System.out.println("---------------- Edit item ------------------");
         String selectedId = new MenuTracker(input, tracker).selectAndShowItem();
@@ -34,13 +33,6 @@ class EditItem implements UserAction {
             System.out.println("The item was changed");
         }
         System.out.println("----------------Edit end---------------------");
-    }
-    /**
-     * Возвращает строку с описание пункта меню.
-     * @return
-     */
-    public String info() {
-        return String.format("%s. %s", this.key(), "Edit item");
     }
 }
 
@@ -70,13 +62,13 @@ public class MenuTracker {
      * Инициализирует массив actions.
      */
     public void fillActions() {
-       this.actions[0] = new AddItem();
-       this.actions[1] = new ShowItems();
-       this.actions[2] = new EditItem();
-       this.actions[3] = new DeleteItem();
-       this.actions[4] = new FindItemById();
-       this.actions[5] = new FindItemByName();
-       EXIT exit = new EXIT();
+       this.actions[0] = new AddItem(0, "Add new item");
+       this.actions[1] = new ShowItems(1, "Show all items");
+       this.actions[2] = new EditItem(2, "Edit item");
+       this.actions[3] = new DeleteItem(3, "Delete item");
+       this.actions[4] = new FindItemById(4, "Find item by id");
+       this.actions[5] = new FindItemByName(5, "Find items by name");
+       EXIT exit = new EXIT(6, "Exit prigram");
        exitKey = exit.key();
        this.actions[6] = exit;
     }
@@ -155,14 +147,16 @@ public class MenuTracker {
      * @version $Id$
      * @since 0.1
      */
-    private class AddItem implements UserAction {
+    private class AddItem extends BaseAction {
         /**
-         * Возвращает заданное число - порядковый номер пункта меню.
-         * @return
+         * Конструктор
+         * @param key инициализирует порядковый номер пункта меню.
+         * @param name инициализирует название пукта меню.
          */
-        public int key() {
-            return 0;
+        public AddItem(int key, String name) {
+            super(key, name);
         }
+
         /**
          * Добавляет новую заявку в хранилище tracker.
          * @param input поток ввода.
@@ -176,13 +170,6 @@ public class MenuTracker {
             showItem(item);
             System.out.println("---------------- End adding -----------------");
         }
-        /**
-         * Возвращает строку с описание пункта меню.
-         * @return
-         */
-        public String info() {
-            return String.format("%s. %s", this.key(), "Add new item");
-        }
     }
 
     /**
@@ -191,13 +178,14 @@ public class MenuTracker {
      * @version $Id$
      * @since 0.1
      */
-    private static class ShowItems implements UserAction {
+    private static class ShowItems extends BaseAction {
         /**
-         * Возвращает заданное число - порядковый номер пункта меню.
-         * @return
+         * Конструктор
+         * @param key инициализирует порядковый номер пункта меню.
+         * @param name инициализирует название пукта меню.
          */
-        public int key() {
-            return 1;
+        public ShowItems(int key, String name) {
+            super(key, name);
         }
         /**
          * Выводит в консоль поля всех заявок в хранилище tracker.
@@ -211,13 +199,6 @@ public class MenuTracker {
             }
             System.out.println("------------------- End ---------------------");
         }
-        /**
-         * Возвращает строку с описание пункта меню.
-         * @return
-         */
-        public String info() {
-            return String.format("%s. %s", this.key(), "Show all items");
-        }
     }
 
     /**
@@ -226,13 +207,14 @@ public class MenuTracker {
      * @version $Id$
      * @since 0.1
      */
-    private class DeleteItem implements UserAction {
+    private class DeleteItem extends BaseAction {
         /**
-         * Возвращает заданное число - порядковый номер пункта меню.
-         * @return
+         * Конструктор
+         * @param key инициализирует порядковый номер пункта меню.
+         * @param name инициализирует название пукта меню.
          */
-        public int key() {
-            return 3;
+        public DeleteItem(int key, String name) {
+            super(key, name);
         }
         /**
          * Удаляет заявку из хранилища tracker.
@@ -249,13 +231,6 @@ public class MenuTracker {
             }
             System.out.println("-------------- End of deleting --------------");
         }
-        /**
-         * Возвращает строку с описание пункта меню.
-         * @return
-         */
-        public String info() {
-            return String.format("%s. %s", this.key(), "Delete item");
-        }
     }
 
     /**
@@ -264,13 +239,14 @@ public class MenuTracker {
      * @version $Id$
      * @since 0.1
      */
-    private  class FindItemById implements UserAction {
+    private  class FindItemById extends BaseAction {
         /**
-         * Возвращает заданное число - порядковый номер пункта меню.
-         * @return
+         * Конструктор
+         * @param key инициализирует порядковый номер пункта меню.
+         * @param name инициализирует название пукта меню.
          */
-        public int key() {
-            return 4;
+        public FindItemById(int key, String name) {
+            super(key, name);
         }
         /**
          * Ищет по id и выводит в консоль заявку в хранилище tracker.
@@ -286,13 +262,6 @@ public class MenuTracker {
             } while (done.equals("Y"));
             System.out.println("---------------- Show item end --------------");
         }
-        /**
-         * Возвращает строку с описание пункта меню.
-         * @return
-         */
-        public String info() {
-            return String.format("%s. %s", this.key(), "Find item by id");
-        }
     }
 
     /**
@@ -301,14 +270,16 @@ public class MenuTracker {
      * @version $Id$
      * @since 0.1
      */
-    private static class FindItemByName implements UserAction {
+    private static class FindItemByName extends BaseAction {
         /**
-         * Возвращает заданное число - порядковый номер пункта меню.
-         * @return
+         * Конструктор
+         * @param key инициализирует порядковый номер пункта меню.
+         * @param name инициализирует название пукта меню.
          */
-        public int key() {
-            return 5;
+        public FindItemByName(int key, String name) {
+            super(key, name);
         }
+
         /**
          * Ищет по имени и выводит в консоль заявку из хранилища tracker.
          * @param input поток ввода.
@@ -322,39 +293,27 @@ public class MenuTracker {
             }
             System.out.println("------------------- End ---------------------");
         }
-        /**
-         * Возвращает строку с описание пункта меню.
-         * @return
-         */
-        public String info() {
-            return String.format("%s. %s", this.key(), "Find items by name");
-        }
     }
 
     /**
      * Реализует пункт выхода из меню. Позволяет получить ключ для выхода и строку с описанием пункта меню.
      */
-    private class EXIT implements UserAction {
+    private class EXIT extends BaseAction {
         /**
-         * Возвращает заданное число - порядковый номер пункта меню.
-         * @return
+         * Конструктор
+         * @param key инициализирует порядковый номер пункта меню.
+         * @param name инициализирует название пукта меню.
          */
-        public int key() {
-            return 6;
+        public EXIT(int key, String name) {
+            super(key, name);
         }
+
         /**
          * Метод не используется, сам выход из меню расположен в StartUI.
-         * @param input поток ввода.
-         * @param tracker хранилище.
+         * @param input
+         * @param tracker
          */
         public void execute(Input input, Tracker tracker) {
-        }
-        /**
-         * Возвращает строку с описание пункта меню.
-         * @return
-         */
-        public String info() {
-            return String.format("%s. %s", this.key(), "Exit prigram");
         }
     }
 }
