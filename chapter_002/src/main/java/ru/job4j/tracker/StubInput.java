@@ -34,4 +34,14 @@ public class StubInput implements Input {
     public String ask(String question) {
         return this.value[this.position++];
     }
+
+    /**
+     * Перегруженый метод ask для ввода и проверки ввода.
+     * @param question  в данном методе не используется.
+     * @param range массив допустимых для ввода значений.
+     * @return целое число из массива value.
+     */
+    public int ask(String question, int[] range) {
+            return Integer.valueOf(this.ask(question));
+    }
 }

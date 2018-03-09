@@ -54,7 +54,7 @@ public class MenuTracker {
     private Input input;
     private Tracker tracker;
     private UserAction[] actions = new UserAction[7];
-    private int ExitKey;
+    private int exitKey;
     /**
      * Объект класса MenuTracker реализует меню.
      * Конструктор класса MenuTracker инициализирует поля input и tracker
@@ -77,7 +77,7 @@ public class MenuTracker {
        this.actions[4] = new FindItemById();
        this.actions[5] = new FindItemByName();
        EXIT exit = new EXIT();
-       ExitKey = exit.key();
+       exitKey = exit.key();
        this.actions[6] = exit;
     }
 
@@ -86,7 +86,7 @@ public class MenuTracker {
      * @return
      */
     public int getExitKey() {
-        return ExitKey;
+        return exitKey;
     }
 
     /**
