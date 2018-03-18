@@ -42,4 +42,16 @@ public class ConvertListTest {
         };
         assertThat(result, is(expect));
     }
+    /**
+     * Test convert.
+     */
+    @Test
+    public void convertListOfArraysToList() {
+        List<int[]> list = new ArrayList<>();
+        list.add(new int[]{1, 2});
+        list.add(new int[]{3, 4, 5, 6});
+        ConvertList testConvert = new ConvertList();
+        List<Integer> result = testConvert.convert(list);
+        assertThat(result, is(new ArrayList<>(asList(1, 2, 3, 4, 5, 6))));
+    }
 }

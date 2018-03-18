@@ -52,4 +52,20 @@ public class ConvertList {
         }
         return result;
     }
+
+    /**
+     * Проходит по всем элементам всех массивов в списке list
+     * и добавляет их в один общий лист Integer.
+     * @param list
+     * @return
+     */
+    public List<Integer> convert (List<int[]> list) {
+        List<Integer> result = new ArrayList<>();
+        for(int[] array : list) {
+            for(int element : array) {
+                result.add(element);
+            }
+        }
+        return result;
+    }
 }
