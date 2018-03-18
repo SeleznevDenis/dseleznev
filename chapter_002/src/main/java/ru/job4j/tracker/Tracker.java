@@ -9,9 +9,11 @@ import java.util.*;
  * @since 0.1
  */
 public class Tracker {
+    private ArrayList<Item> items = new ArrayList<>();
 
-     private Item[] items = new Item[100];
-     private int position = 0;
+
+     //private Item[] items = new Item[100];
+     //private int position = 0;
      private static final Random RN = new Random();
 
     /**
@@ -21,7 +23,8 @@ public class Tracker {
      */
      public Item add(Item item) {
          item.setId(this.generateId());
-         this.items[this.position++] = item;
+         items.add(item);
+         //this.items[this.position++] = item;
          return item;
      }
 
@@ -31,12 +34,18 @@ public class Tracker {
      * @param item заданная заявка.
      */
      public void replace(String id, Item item) {
-          for (int i = 0; i < this.position; i++) {
-              if (this.items[i] != null && this.items[i].getId().equals(id)) {
-                  this.items[i] = item;
-                  break;
-              }
-          }
+         for (Item checkedItem : this.items) {
+             if (checkedItem.getId().equals(id)) {
+                 this.items.set(this.items.indexOf(checkedItem), item);
+                 break;
+             }
+         }
+          //for (int i = 0; i < this.position; i++) {
+           //   if (this.items[i] != null && this.items[i].getId().equals(id)) {
+          //        this.items[i] = item;
+          //        break;
+          //    }
+          //}
 
      }
 
@@ -47,29 +56,36 @@ public class Tracker {
      * @param id
      */
      public void delete(String id) {
-         for (int i = 0; i < this.position; i++) {
-             if (this.items[i].getId().equals(id)) {
-                 for (int j = i; j < this.position; j++) {
-                     this.items[j] = this.items[j + 1];
-                 }
-                 this.items[this.position--] = null;
+         for (Item checkedItem : this.items) {
+             if (checkedItem.getId().equals(id)) {
+                 this.items.remove(checkedItem);
+                 break;
              }
          }
+         //for (int i = 0; i < this.position; i++) {
+         //    if (this.items[i].getId().equals(id)) {
+         //        for (int j = i; j < this.position; j++) {
+         //            this.items[j] = this.items[j + 1];
+         //        }
+         //        this.items[this.position--] = null;
+         //    }
+         //}
      }
 
     /**
      * Возвращает из хранилища массив с заявками.
      * @return массив содержащий ненулевые ссылки на объекты Item.
      */
-     public Item[] findAll() {
-         Item[] allItem = new Item[this.position];
-         int allItemLength = 0;
-         for (Item checked : this.items) {
-             if (checked != null) {
-                 allItem[allItemLength++] = checked;
-             }
-         }
-         return Arrays.copyOf(allItem, allItemLength);
+     public ArrayList<Item> findAll() {
+         return this.items;
+        // Item[] allItem = new Item[this.position];
+        // int allItemLength = 0;
+        // for (Item checked : this.items) {
+        //     if (checked != null) {
+        //         allItem[allItemLength++] = checked;
+        //     }
+         //}
+        // return Arrays.copyOf(allItem, allItemLength);
      }
 
     /**
@@ -77,15 +93,19 @@ public class Tracker {
      * @param key заданное имя для поиска.
      * @return массив типа Item содержащий все заявки с совпадающим заданным именем.
      */
-     public Item[] findByName(String key) {
-         Item[] foundArr = new Item[this.position];
-         int foundArrLength = 0;
-         for (Item checked : this.items) {
-             if (checked != null && checked.getName().equals(key)) {
-                 foundArr[foundArrLength++] = checked;
+     public ArrayList<Item> findByName(String key) {
+         //Item[] foundArr = new Item[this.position];
+         ArrayList<Item> foundArr = new ArrayList<>();
+         //int foundArrLength = 0;
+         for (Item checkedItem : this.items) {
+             //if (checked != null && checked.getName().equals(key)) {
+             if (checkedItem.getName().equals(key)) {
+                 //foundArr[foundArrLength++] = checked;
+                 foundArr.add(checkedItem);
              }
          }
-         return Arrays.copyOf(foundArr, foundArrLength);
+         //return Arrays.copyOf(foundArr, foundArrLength);
+         return foundArr;
      }
 
     /**
