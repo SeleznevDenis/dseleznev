@@ -10,9 +10,8 @@ import java.util.*;
  */
 public class Tracker {
 
-     private Item[] items = new Item[100];
-     private int position = 0;
-     private static final Random RN = new Random();
+    private ArrayList<Item> items = new ArrayList<>();
+    private static final Random RN = new Random();
 
     /**
      * Метод реализующий добавление заявки в хранилище.
@@ -21,7 +20,7 @@ public class Tracker {
      */
      public Item add(Item item) {
          item.setId(this.generateId());
-         this.items[this.position++] = item;
+         items.add(item);
          return item;
      }
 
@@ -31,13 +30,12 @@ public class Tracker {
      * @param item заданная заявка.
      */
      public void replace(String id, Item item) {
-          for (int i = 0; i < this.position; i++) {
-              if (this.items[i] != null && this.items[i].getId().equals(id)) {
-                  this.items[i] = item;
-                  break;
-              }
-          }
-
+         for (Item checkedItem : this.items) {
+             if (checkedItem.getId().equals(id)) {
+                 this.items.set(this.items.indexOf(checkedItem), item);
+                 break;
+             }
+         }
      }
 
     /**
@@ -47,12 +45,10 @@ public class Tracker {
      * @param id
      */
      public void delete(String id) {
-         for (int i = 0; i < this.position; i++) {
-             if (this.items[i].getId().equals(id)) {
-                 for (int j = i; j < this.position; j++) {
-                     this.items[j] = this.items[j + 1];
-                 }
-                 this.items[this.position--] = null;
+         for (Item checkedItem : this.items) {
+             if (checkedItem.getId().equals(id)) {
+                 this.items.remove(checkedItem);
+                 break;
              }
          }
      }
@@ -61,15 +57,8 @@ public class Tracker {
      * Возвращает из хранилища массив с заявками.
      * @return массив содержащий ненулевые ссылки на объекты Item.
      */
-     public Item[] findAll() {
-         Item[] allItem = new Item[this.position];
-         int allItemLength = 0;
-         for (Item checked : this.items) {
-             if (checked != null) {
-                 allItem[allItemLength++] = checked;
-             }
-         }
-         return Arrays.copyOf(allItem, allItemLength);
+     public ArrayList<Item> findAll() {
+        return this.items;
      }
 
     /**
@@ -77,15 +66,14 @@ public class Tracker {
      * @param key заданное имя для поиска.
      * @return массив типа Item содержащий все заявки с совпадающим заданным именем.
      */
-     public Item[] findByName(String key) {
-         Item[] foundArr = new Item[this.position];
-         int foundArrLength = 0;
-         for (Item checked : this.items) {
-             if (checked != null && checked.getName().equals(key)) {
-                 foundArr[foundArrLength++] = checked;
+     public ArrayList<Item> findByName(String key) {
+         ArrayList<Item> foundArr = new ArrayList<>();
+         for (Item checkedItem : this.items) {
+             if (checkedItem.getName().equals(key)) {
+                 foundArr.add(checkedItem);
              }
          }
-         return Arrays.copyOf(foundArr, foundArrLength);
+         return foundArr;
      }
 
     /**
@@ -108,7 +96,7 @@ public class Tracker {
      * Метод генерирует уникальный ключ для заявки.
      * @return Уникальный ключ.
      */
-    private String generateId() {
-        return String.valueOf(System.currentTimeMillis() + RN.nextInt());
-    }
+     private String generateId() {
+         return String.valueOf(System.currentTimeMillis() + RN.nextInt());
+     }
 }
