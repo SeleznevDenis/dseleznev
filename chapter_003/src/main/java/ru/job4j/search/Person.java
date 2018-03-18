@@ -15,7 +15,7 @@ public class Person {
     /**
      * Конструктор, инициализирует поля имя, фамилия, телефон, адрес.
      * @param name имя.
-     * @param surname фимилия.
+     * @param surname фамилия.
      * @param phone телефон.
      * @param address адрес.
      */
@@ -24,6 +24,15 @@ public class Person {
         this.surname = surname;
         this.phone = phone;
         this.address = address;
+    }
+
+    /**
+     * Переопределенный метод toString()
+     * @return Строку - объединенное содержание всех полей объекта Person.
+     */
+    @Override
+    public String toString() {
+        return this.name + this.surname + this.phone + this.address;
     }
 
     public String getName() {
