@@ -1,5 +1,6 @@
 package ru.job4j.paint;
 
+import com.sun.org.apache.xml.internal.serialize.LineSeparator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,7 @@ public class PaintTest {
 
     private final PrintStream stdout = System.out;
     private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private final String ln = System.lineSeparator();
 
     @Before
     public void loadOutput() {
@@ -44,7 +46,7 @@ public class PaintTest {
                                 .append("†††††††††")
                                 .append("†     †")
                                 .append("†     †")
-                                .append("†††††††††\r\n")
+                                .append("†††††††††" + ln)
                                 .toString()
                 )
         );
@@ -64,7 +66,7 @@ public class PaintTest {
                                 .append("   †   ")
                                 .append("  †††  ")
                                 .append(" †††††† ")
-                                .append("†††††††††\r\n")
+                                .append("†††††††††" + ln)
                                 .toString()
                 )
         );

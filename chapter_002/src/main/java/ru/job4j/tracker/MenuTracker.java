@@ -119,8 +119,8 @@ public class MenuTracker {
     private void showItem(Item item) {
         if (item != null) {
             System.out.println(
-                    String.format("%s | %s | %s%n%s",
-                            item.getId(), item.getName(), new Date(item.getCreated()), item.getDesc()
+                    String.format("%s | %s%n%s",
+                            item.getId(), item.getName(), item.getDesc()
                     )
             );
         }
