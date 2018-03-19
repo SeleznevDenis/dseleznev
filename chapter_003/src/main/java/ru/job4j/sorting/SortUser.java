@@ -17,7 +17,7 @@ public class SortUser {
      * @param list заданный для сортировки.
      * @return TreeSet отсортированный по id.
      */
-    public Set<User> sort (List<User> list) {
+    public Set<User> sort(List<User> list) {
         return new TreeSet<>(list);
     }
 
@@ -26,7 +26,7 @@ public class SortUser {
      * @param list заданный для сортировки.
      * @return отсортированный List.
      */
-    public List<User> sortNameLength (List<User> list) {
+    public List<User> sortNameLength(List<User> list) {
         list.sort(
                 new Comparator<User>() {
                     @Override
@@ -49,8 +49,8 @@ public class SortUser {
                 new Comparator<User>() {
                     @Override
                     public int compare(User o1, User o2) {
-                        return o1.getName().equals(o2.getName()) ?
-                                o1.getAge() - o2.getAge() : o1.getName().compareTo(o2.getName());
+                        return o1.getName().equals(o2.getName())
+                                ? o1.getAge() - o2.getAge() : o1.getName().compareTo(o2.getName());
                     }
                 }
         );

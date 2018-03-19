@@ -5,7 +5,7 @@ package ru.job4j.sorting;
  * @version $Id$
  * @since 0.1
  */
-public class User implements Comparable{
+public class User implements Comparable {
 
     private String name;
     private int age;
@@ -36,6 +36,6 @@ public class User implements Comparable{
     @Override
     public int compareTo(Object o) {
         User user = (User) o;
-        return Integer.compare(this.age, user.age );
+        return Integer.compare(this.age, user.age);
     }
 }

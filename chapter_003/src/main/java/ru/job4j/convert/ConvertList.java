@@ -59,10 +59,10 @@ public class ConvertList {
      * @param list
      * @return
      */
-    public List<Integer> convert (List<int[]> list) {
+    public List<Integer> convert(List<int[]> list) {
         List<Integer> result = new ArrayList<>();
-        for(int[] array : list) {
-            for(int element : array) {
+        for (int[] array : list) {
+            for (int element : array) {
                 result.add(element);
             }
         }
