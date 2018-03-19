@@ -59,7 +59,7 @@ public class MenuTracker {
     }
 
     /**
-     * Инициализирует массив actions.
+     * Инициализирует ArrayList actions.
      */
     public void fillActions() {
         this.actions.add(new AddItem(0, "Add new item"));
@@ -82,7 +82,7 @@ public class MenuTracker {
     }
 
     /**
-     * Возвращает массив, содержащий ключи номера всех пунктов меню.
+     * Возвращает ArrayList, содержащий ключи номера всех пунктов меню.
      * @return
      */
     public ArrayList<Integer> getNumberMenuItems() {
@@ -94,7 +94,7 @@ public class MenuTracker {
     }
 
     /**
-     * Позволяет выбрать объект, из массива actions для действия - execute.
+     * Позволяет выбрать объект, из ArrayList actions для действия - execute.
      * @param key номер объекта в массиве actions, совпадает с номером пункта меню.
      */
     public void select(int key) {

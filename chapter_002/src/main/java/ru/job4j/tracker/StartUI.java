@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.List;
+
 /**
  * @author Denis Seleznev(d.selezneww@mail.ru)
  * @version $Id$
@@ -30,7 +32,7 @@ public class StartUI {
     public void init() {
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         menu.fillActions();
-        ranges = menu.getNumberMenuItems().stream().mapToInt(i -> i).toArray();
+        List<Integer> ranges = menu.getNumberMenuItems();
         int key;
         do {
             System.out.println("Menu:");

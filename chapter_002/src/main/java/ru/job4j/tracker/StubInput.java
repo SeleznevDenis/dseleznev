@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.util.List;
+
 /**
  * @author Denis Seleznev (d.selezneww@mail.ru)
  * @version $Id$
@@ -41,7 +43,7 @@ public class StubInput implements Input {
      * @param range массив допустимых для ввода значений.
      * @return целое число из массива value.
      */
-    public int ask(String question, int[] range) {
+    public int ask(String question, List<Integer> range) {
             return Integer.valueOf(this.ask(question));
     }
 }

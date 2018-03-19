@@ -39,9 +39,7 @@ public class Tracker {
      }
 
     /**
-     * Метод удаляет объект хранящийся в массиве items следующим образом:
-     * Метод сдвигает все элементы массива items, на -1 позицию с перезаписью.
-     * начиная с объекта массива с индексом id + 1.
+     * Метод удаляет объект хранящийся в ArrayList items.
      * @param id
      */
      public void delete(String id) {
@@ -54,7 +52,7 @@ public class Tracker {
      }
 
     /**
-     * Возвращает из хранилища массив с заявками.
+     * Возвращает из хранилища ArrayList с заявками.
      * @return массив содержащий ненулевые ссылки на объекты Item.
      */
      public ArrayList<Item> findAll() {
@@ -64,7 +62,7 @@ public class Tracker {
     /**
      * Метод производит поиск заявок в хранилище по имени.
      * @param key заданное имя для поиска.
-     * @return массив типа Item содержащий все заявки с совпадающим заданным именем.
+     * @return ArrayList содержащий все заявки с совпадающим заданным именем.
      */
      public ArrayList<Item> findByName(String key) {
          ArrayList<Item> foundArr = new ArrayList<>();
