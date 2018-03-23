@@ -18,20 +18,11 @@ public class StringsCompare implements Comparator<String> {
      */
     @Override
     public int compare(String left, String right) {
-        List<Character> leftArr = new ArrayList<>();
-        for (Character element : left.toCharArray()) {
-            leftArr.add(element);
-        }
-        List<Character> rightArr = new ArrayList<>();
-        for (Character element : right.toCharArray()) {
-            rightArr.add(element);
-        }
-        List<Character> lowArray = leftArr.size() < rightArr.size() ? leftArr : rightArr;
-        for (int i = 0; i < lowArray.size(); i++) {
-            if (leftArr.get(i) != rightArr.get(i)) {
-                return leftArr.get(i) - rightArr.get(i);
+        for (int i = 0; i < Math.min(left.length(), right.length()); i++) {
+            if (left.charAt(i) != right.charAt(i)) {
+                return left.charAt(i) - right.charAt(i);
             }
         }
-        return leftArr.size() - rightArr.size();
+        return left.length() - right.length();
     }
 }
