@@ -56,10 +56,9 @@ public class BishopTest {
 
     /**
      * Test way при конечных координатах, неотвечающих правилу передвижения слона.
-     * @throws ImpossibleMoveException Исключение: Невозможный ход.
      */
     @Test
-    public void ifWrongWayThenReturnImeException() throws ImpossibleMoveException {
+    public void ifWrongWayThenReturnImeException() {
         Bishop bishop = new Bishop(new Cell(4, 4));
         try {
             bishop.way(new Cell(4, 4), new Cell(5, 6));

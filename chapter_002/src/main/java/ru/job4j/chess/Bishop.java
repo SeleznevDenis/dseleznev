@@ -27,20 +27,21 @@ public class Bishop extends Figure {
      * на пути от начальных координат до конечных.
      */
     public Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
+        if (dest.getX() < 0 && dest.getY() < 0 && dest.getX() > 9 && dest.getY() > 9
+                && Math.abs(dest.getX() - source.getX()) != Math.abs(dest.getY() - source.getY())) {
+            throw new ImpossibleMoveException("Слон так не ходит");
+        }
         Cell[] way = new Cell[8];
         int wayPosition;
         int currentX = source.getX();
         int currentY = source.getY();
-        if (dest.getX() > 0 && dest.getY() > 0 && dest.getX() < 9 && dest.getY() < 9
-                && Math.abs(dest.getX() - source.getX()) == Math.abs(dest.getY() - source.getY())) {
-            int movesNumber = Math.abs(dest.getX() - source.getX());
-            for (wayPosition = 0; wayPosition < movesNumber; wayPosition++) {
-               int x = (source.getX() < dest.getX()) ? ++currentX : --currentX;
-               int y = (source.getY() < dest.getY()) ? ++currentY : --currentY;
-               way[wayPosition] = new Cell(x, y);
-            }
-        } else {
-            throw new ImpossibleMoveException("Слон так не ходит");
+        int movesNumber = Math.abs(dest.getX() - source.getX());
+        int moveForX = source.getX() < dest.getX() ? 1 : -1;
+        int moveForY = source.getY() < dest.getY() ? 1 : -1;
+        for (wayPosition = 0; wayPosition < movesNumber; wayPosition++) {
+            currentX += moveForX;
+            currentY += moveForY;
+            way[wayPosition] = new Cell(currentX, currentY);
         }
         return Arrays.copyOf(way, wayPosition);
     }
