@@ -30,7 +30,7 @@ public class MatrixIterator implements Iterator {
      */
     @Override
     public boolean hasNext() {
-        return (row < array.length);
+        return (row < array.length && column < array[row].length);
     }
 
     /**
@@ -40,7 +40,7 @@ public class MatrixIterator implements Iterator {
      */
     @Override
     public Object next() {
-        if (this.row >= array.length) {
+        if (!hasNext()) {
             throw new NoSuchElementException();
         }
         int result = array[row][column++];

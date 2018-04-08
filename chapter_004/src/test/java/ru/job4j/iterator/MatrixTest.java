@@ -68,4 +68,12 @@ public class MatrixTest {
         it = new MatrixIterator(new int[][]{});
         it.next();
     }
+
+    @Test
+    public void ifTwoDimensionalArrayIsEmptyIteratorHasNextShouldFalse() {
+        it = new MatrixIterator(new int[][]{{}});
+        Iterator it2 = new MatrixIterator(new int[][]{{}, {}});
+        assertThat(it.hasNext(), is(false));
+        assertThat(it2.hasNext(), is(false));
+    }
 }
