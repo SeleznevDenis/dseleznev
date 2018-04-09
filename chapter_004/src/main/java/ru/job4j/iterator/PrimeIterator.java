@@ -14,7 +14,7 @@ public class PrimeIterator implements Iterator {
 
     private final int[] array;
     private int position;
-    private final boolean[] primes;
+    private boolean[] primes;
 
     /**
      * Конструктор, инициализирует поле array, и ставит указатель
@@ -24,9 +24,6 @@ public class PrimeIterator implements Iterator {
      */
     public PrimeIterator(int[] array) {
         this.array = array;
-        this.primes = findPrimes(array);
-        this.position = -1;
-        this.position = findNextPrimeNumber();
     }
 
     /**
@@ -35,8 +32,8 @@ public class PrimeIterator implements Iterator {
      */
     private int findNextPrimeNumber() {
         int nextPrimeNumber = -1;
-        for (int i = position + 1; i < array.length; i++) {
-            if (primes[array[i]]) {
+        for (int i = this.position; i < array.length; i++) {
+            if (findPrimes()[this.array[i]]) {
                 nextPrimeNumber = i;
                 break;
             }
@@ -45,26 +42,27 @@ public class PrimeIterator implements Iterator {
     }
 
     /**
-     * Находит все простые числа от 0 до максимального числа
-     * в массиве array, используя алгоритм: решето Эратосфена.
-     * @param array заданный, для итерации массив.
-     * @return массив типа boolean, в котором индексу ячейки соответстует число,
-     * а значение ячейки - true, если число простое и - false, если число составное.
+     * При первом вызове, находит все простые числа от 0 до максимального числа
+     * в массиве array, используя алгоритм: решето Эратосфена. И сохраняет их в this.primes.
+     * @return this.primes, в котором индексу ячейки соответстует число,
+     * а значению ячейки - true, если число простое и - false, если число составное.
      */
-    private boolean[] findPrimes(int[] array) {
-        int maxNumberOfArray = array[array.length - 1];
-        boolean[] primes = new boolean[maxNumberOfArray + 1];
-        Arrays.fill(primes, true);
-        primes[0] = false;
-        primes[1] = false;
-        for (int i = 2; i < primes.length; ++i) {
-            if (primes[i]) {
-                for (int j = 2; i * j < primes.length; ++j) {
-                    primes[i * j] = false;
+    private boolean[] findPrimes() {
+        if (this.primes == null) {
+            int maxNumberOfArray = this.array[this.array.length - 1];
+            this.primes = new boolean[maxNumberOfArray + 1];
+            Arrays.fill(this.primes, true);
+            this.primes[0] = false;
+            this.primes[1] = false;
+            for (int i = 2; i < primes.length; ++i) {
+                if (this.primes[i]) {
+                    for (int j = 2; i * j < this.primes.length; ++j) {
+                        this.primes[i * j] = false;
+                    }
                 }
             }
         }
-        return primes;
+        return this.primes;
     }
 
     /**
@@ -74,27 +72,28 @@ public class PrimeIterator implements Iterator {
      */
     @Override
     public boolean hasNext() {
-        return this.position != -1;
+        return findNextPrimeNumber() != -1;
     }
 
     /**
-     * Возвращает текущий элемент и переводит указатель на следующее простое число.
-     * @return простое число под индексом position в массиве array.
-     * @throws NoSuchElementException в случае если текущий элемент, не является простым числом.
+     * Возвращает простое число за указателем и переводит указатель на индекс найденного простого числа + 1.
+     * @return простое число.
+     * @throws NoSuchElementException в случае если в массиве нет простых чисел за указателем.
      */
     @Override
     public Object next() {
-        if (this.position == -1) {
+        if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        int currentPrimeNumber = array[position];
-        position = findNextPrimeNumber();
-        return currentPrimeNumber;
+        int nextPrimeNumber = findNextPrimeNumber();
+        int result = array[nextPrimeNumber];
+        this.position = nextPrimeNumber + 1;
+        return result;
     }
 
     /**
      * Метод не поддерживается в данной реализации и
-     * выбрасывает исключение при попытке использования.
+     * генерирует исключение при попытке использования.
      * @throws UnsupportedOperationException Операция не поддерживается.
      */
     @Override
