@@ -21,11 +21,18 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
     private int modCount;
 
     /**
+     * Текущий, проверяемый методом isBinary, узел.
+     */
+    Node<E> checkingNode;
+
+    /**
      * Конструктор, инициализирует корень дерева.
      * @param root корень
      */
     public Tree(E root) {
-        this.root = new Node<E>(root);
+        Node<E> newRoot = new Node<>(root);
+        this.root = newRoot;
+        this.checkingNode = newRoot;
     }
 
     /**
@@ -43,6 +50,28 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
             foundParent.get().add(new Node<>(child));
             modCount++;
             result = true;
+        }
+        return result;
+    }
+
+    /**
+     * Проверяет, является ли дерево бинарным.
+     * @return true - если дерево бинарное.
+     *         false - если дерево не бинарное.
+     */
+    public boolean isBinary() {
+        boolean result = true;
+        Node<E> parent = this.checkingNode;
+        if (parent.leaves().size() <= 2) {
+            for (Node<E> child : parent.leaves()) {
+                this.checkingNode = child;
+                if (!isBinary()) {
+                    result = false;
+                    break;
+                }
+            }
+        } else {
+            result = false;
         }
         return result;
     }
