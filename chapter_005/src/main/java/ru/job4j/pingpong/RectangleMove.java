@@ -2,6 +2,10 @@ package ru.job4j.pingpong;
 
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
+
 /**
  * Движение квадрата.
  * @author Denis Seleznev
@@ -43,7 +47,7 @@ public class RectangleMove implements Runnable {
      */
     @Override
     public void run() {
-        while (true) {
+        while (!Thread.interrupted()) {
             double rectX = this.rect.getX();
             double rectY = this.rect.getY();
             if (rectX >= 300D || rectX <= 0D) {
@@ -57,7 +61,7 @@ public class RectangleMove implements Runnable {
             try {
                 Thread.sleep(60);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
