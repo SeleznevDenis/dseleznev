@@ -37,4 +37,9 @@ public class AnagramsTest {
         Anagrams testAnagrams = new Anagrams();
         assertThat(testAnagrams.checkWords("мамаа", "мама"), is(false));
     }
+
+    @Test
+    public void ifAnagramsHasADifferentCaseCheckShouldReturnTrue() {
+        assertThat(new Anagrams().checkWords("Мама", "мама"), is(true));
+    }
 }

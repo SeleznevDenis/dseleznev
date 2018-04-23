@@ -22,24 +22,22 @@ public class Anagrams {
             result = false;
         } else {
             HashMap<Character, Integer> symbolStorage = new HashMap<>();
-            for (Character symbol : first.toCharArray()) {
-                int symbolCounter = 1;
-                if (symbolStorage.containsKey(symbol)) {
-                    symbolCounter = symbolStorage.get(symbol) + 1;
+            for (Character symbol : first.toLowerCase().toCharArray()) {
+                Integer symbolCounter = symbolStorage.putIfAbsent(symbol, 1);
+                if (symbolCounter != null) {
+                    symbolStorage.put(symbol, symbolCounter + 1);
                 }
-                symbolStorage.put(symbol, symbolCounter);
             }
-            for (Character symbol : second.toCharArray()) {
-                if (symbolStorage.containsKey(symbol)) {
-                    int currentValue = symbolStorage.get(symbol);
-                    if (currentValue > 1) {
-                        symbolStorage.put(symbol, currentValue - 1);
-                    } else {
-                        symbolStorage.remove(symbol);
-                    }
-                } else {
+            for (Character symbol : second.toLowerCase().toCharArray()) {
+                Integer currentValue = symbolStorage.get(symbol);
+                if (currentValue == null) {
                     result = false;
                     break;
+                }
+                if (currentValue > 1) {
+                    symbolStorage.replace(symbol, currentValue - 1);
+                } else {
+                    symbolStorage.remove(symbol);
                 }
             }
         }
