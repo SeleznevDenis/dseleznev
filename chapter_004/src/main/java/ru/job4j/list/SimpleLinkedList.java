@@ -1,5 +1,7 @@
 package ru.job4j.list;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 import ru.job4j.generic.SimpleArray;
 
 import java.util.Arrays;
@@ -14,17 +16,20 @@ import java.util.NoSuchElementException;
  * @since 01.04.2018
  * @param <E> Параметризованный тип списка.
  */
+@ThreadSafe
 public class SimpleLinkedList<E> implements SimpleList<E> {
-
+    @GuardedBy("this")
     private int size;
+    @GuardedBy("this")
     private Node<E> first;
+    @GuardedBy("this")
     private Node<E> last;
     private int modCount;
 
     /**
      * @return размер списка.
      */
-    public int getSize() {
+    public synchronized int getSize() {
         return size;
     }
 
@@ -33,7 +38,7 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
      * @param value объект, который необходимо добавить в хранилище.
      */
     @Override
-    public void add(E value) {
+    public synchronized void add(E value) {
         this.modCount++;
         Node<E> newNode = new Node<>(this.last, value, null);
         if (size == 0) {
@@ -59,7 +64,7 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
      * Удаляет первый объект из списка.
      * @return удаляемый объект.
      */
-    public E pollFirst() {
+    public synchronized E pollFirst() {
         E result = this.first.item;
         if (size > 1) {
             this.first.next.prev = null;
@@ -77,7 +82,7 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
      * Удаляет последний объект из списка.
      * @return удаляемый объект.
      */
-    public E pollLast() {
+    public synchronized E pollLast() {
         E result = this.last.item;
         if (size > 1) {
             this.last.prev.next = null;
@@ -96,7 +101,7 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
      * @param index индекс узла.
      * @return искомый узел.
      */
-    private Node<E> findNodeByIndex(int index) {
+    private synchronized Node<E> findNodeByIndex(int index) {
         int halfList = this.size / 2;
         Node<E> currentNode;
         if (index <= halfList) {
@@ -117,9 +122,8 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
      * @return возвращает итератор для обхода списка.
      */
     @Override
-    public Iterator<E> iterator() {
+    public synchronized Iterator<E> iterator() {
         return new Iterator<E>() {
-
             private int nodeCount;
             private final int expectedModCount = modCount;
             private Node<E> currentNode = first;
@@ -152,6 +156,8 @@ public class SimpleLinkedList<E> implements SimpleList<E> {
                 return result;
             }
         };
+
+
     }
 
     /**

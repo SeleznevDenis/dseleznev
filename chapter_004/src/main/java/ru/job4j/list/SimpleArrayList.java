@@ -1,5 +1,8 @@
 package ru.job4j.list;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -12,8 +15,10 @@ import java.util.NoSuchElementException;
  * @since 31.03.2018
  * @param <E> Параметризованный тип данных, хранящихся в списке.
  */
+@ThreadSafe
 public class SimpleArrayList<E> implements SimpleList<E> {
 
+    @GuardedBy("this")
     private Object[] array;
     private int index;
     private static final double FILL_FACTOR = 0.75D;
@@ -38,7 +43,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     /**
      * Проверяет заполнение массива и при необходимости увеличивает его.
      */
-    private void checkEnsureCapacity() {
+    private synchronized void checkEnsureCapacity() {
         if (index > array.length * FILL_FACTOR) {
             this.array = Arrays.copyOf(this.array, (int) (this.index * MAGNIFICATION_FACTOR));
         }
@@ -49,7 +54,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
      * @param value заданный для добавления элемент.
      */
     @Override
-    public void add(E value) {
+    public synchronized void add(E value) {
         checkEnsureCapacity();
         this.modCount++;
         this.array[index++] = value;
@@ -61,7 +66,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
      * @return элемент соответствующий индексу.
      */
     @Override
-    public E get(int index) {
+    public synchronized E get(int index) {
         return (E) this.array[index];
     }
 
@@ -71,7 +76,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-
+            @GuardedBy("this")
             private int position;
             private final int expectedModCount = modCount;
 
@@ -81,7 +86,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
              *         false - если элементов больше нет.
              */
             @Override
-            public boolean hasNext() {
+            public synchronized boolean hasNext() {
                 return (this.position < index);
             }
 
@@ -90,7 +95,7 @@ public class SimpleArrayList<E> implements SimpleList<E> {
              * @return текущий элемент.
              */
             @Override
-            public E next() {
+            public synchronized E next() {
                 if (this.expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
