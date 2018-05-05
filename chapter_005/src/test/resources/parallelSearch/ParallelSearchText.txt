@@ -1,0 +1,2 @@
+текст для проверки parallelSearchTest
+key
