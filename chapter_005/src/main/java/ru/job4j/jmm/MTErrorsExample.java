@@ -21,12 +21,12 @@ public class MTErrorsExample {
         /**
          * Флаг запуска первого потока.
          */
-        Boolean firstFlag = false;
+        boolean firstFlag;
 
         /**
          * Флаг запуска второго потока.
          */
-        Boolean secondFlag = false;
+        boolean secondFlag;
 
         /**
          * Устанавливает значение заданного флага true.
@@ -38,15 +38,15 @@ public class MTErrorsExample {
             synchronized (this) {
                 if (flag.equals("firstFlag")) {
                     this.firstFlag = true;
-                    System.out.printf("%s установил firstFlag%n",Thread.currentThread().getName());
+                    System.out.printf("%s установил firstFlag%n", Thread.currentThread().getName());
                 } else if (flag.equals("secondFlag")) {
                     this.secondFlag = true;
-                    System.out.printf("%s установил secondFlag%n",Thread.currentThread().getName());
+                    System.out.printf("%s установил secondFlag%n", Thread.currentThread().getName());
                 }
                 this.notify();
                 while (!firstFlag || !secondFlag) {
                     try {
-                        System.out.printf("%s ждёт активацию флага%n",Thread.currentThread().getName());
+                        System.out.printf("%s ждёт активацию флага%n", Thread.currentThread().getName());
                         this.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -61,7 +61,7 @@ public class MTErrorsExample {
          */
         private void increment() {
             for (int i = 0; i < 10; i++) {
-                System.out.printf("%s инкрементирует %s%n",Thread.currentThread().getName(), ++this.counter);
+                System.out.printf("%s инкрементирует %s%n", Thread.currentThread().getName(), ++this.counter);
             }
         }
     }

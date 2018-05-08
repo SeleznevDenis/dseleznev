@@ -33,7 +33,7 @@ public class ThreadPool {
     /**
      * Состояние thread pool.
      */
-    private volatile boolean running = false;
+    private volatile boolean running;
 
     /**
      * Массив используемых потоков.
