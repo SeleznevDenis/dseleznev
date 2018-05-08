@@ -133,7 +133,7 @@ public class ParallelSearch {
             public void run() {
                 while (!finish || !filesIsEmpty) {
                     synchronized (ParallelSearch.this) {
-                        if (files.isEmpty()) {
+                        while (files.isEmpty()) {
                             try {
                                 ParallelSearch.this.wait();
                             } catch (InterruptedException e) {
@@ -146,11 +146,7 @@ public class ParallelSearch {
                         currentFile = files.poll();
                         ParallelSearch.this.notify();
                     }
-                    try {
-                        parsingCurrentFile();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    parsingCurrentFile();
                     synchronized (ParallelSearch.this) {
                         this.filesIsEmpty = files.isEmpty();
                     }
@@ -161,15 +157,18 @@ public class ParallelSearch {
              * Производит чтение файла и добавляет его путь в
              * paths в случае если файл содержит заданный text.
              */
-            private void parsingCurrentFile() throws FileNotFoundException {
-                Scanner fileScanner = new Scanner(new File(currentFile));
-                while (fileScanner.hasNext()) {
-                    if (fileScanner.nextLine().contains(text)) {
-                        synchronized (ParallelSearch.this) {
-                            paths.add(currentFile);
-                            break;
+            private void parsingCurrentFile() {
+                try (Scanner fileScanner = new Scanner(new File(currentFile))) {
+                    while (fileScanner.hasNext()) {
+                        if (fileScanner.nextLine().contains(text)) {
+                            synchronized (ParallelSearch.this) {
+                                paths.add(currentFile);
+                                break;
+                            }
                         }
                     }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         };
