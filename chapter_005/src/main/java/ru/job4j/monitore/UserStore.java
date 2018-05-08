@@ -34,12 +34,11 @@ public class UserStore {
      * @return успешность операции.
      */
     public synchronized boolean update(User user) {
-        boolean done = false;
-        if (user != null && mainStorage.containsKey(user.getId())) {
-            mainStorage.put(user.getId(), user);
-            done = true;
+        User check = null;
+        if (user != null) {
+            check = this.mainStorage.replace(user.getId(), user);
         }
-        return done;
+        return check != null;
     }
 
     /**
@@ -63,7 +62,7 @@ public class UserStore {
         if (amount > 0 && mainStorage.containsKey(fromId) && mainStorage.containsKey(told)) {
             User fromUser = mainStorage.get(fromId);
             User toldUser = mainStorage.get(told);
-            if (fromUser != null && fromUser.getAmount() >= amount && toldUser != null) {
+            if (fromUser.getAmount() >= amount) {
                 mainStorage.put(fromId, new User(fromId, fromUser.getAmount() - amount));
                 mainStorage.put(told, new User(told, toldUser.getAmount() + amount));
                 done = true;
