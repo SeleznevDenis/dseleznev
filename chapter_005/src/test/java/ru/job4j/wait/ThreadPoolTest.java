@@ -22,12 +22,5 @@ public class ThreadPoolTest {
             testPool.add(new Work(Integer.toString(i)));
         }
         testPool.stopThreads();
-        for (Thread thread : testPool.getThreads()) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

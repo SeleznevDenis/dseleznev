@@ -33,7 +33,7 @@ public class ThreadPool {
     /**
      * Состояние thread pool.
      */
-    private boolean running;
+    private volatile boolean running = false;
 
     /**
      * Массив используемых потоков.
@@ -60,7 +60,6 @@ public class ThreadPool {
      * @return задача для обработки.
      */
     private synchronized Work getAJob() {
-        Work result;
         while (tasksQueue.isEmpty()) {
             try {
                 this.wait();
@@ -68,7 +67,7 @@ public class ThreadPool {
                 e.printStackTrace();
             }
         }
-        result = this.tasksQueue.poll();
+        Work result = this.tasksQueue.poll();
         this.notify();
         return result;
     }
@@ -97,16 +96,16 @@ public class ThreadPool {
     }
 
     /**
-     * @return массив потоков, используемых threadPool.
-     */
-    public Thread[] getThreads() {
-        return this.allThreads;
-    }
-
-    /**
      * Останавливает работу threadPool, когда очередь задач опустеет.
      */
     public void stopThreads() {
         this.running = false;
+        for (Thread currentThread : this.allThreads) {
+            try {
+                currentThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
