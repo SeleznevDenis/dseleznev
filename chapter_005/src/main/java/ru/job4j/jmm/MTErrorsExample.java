@@ -12,30 +12,56 @@ public class MTErrorsExample {
     /**
      * Иллюстрирует проблему "Состояние гонки".
      */
-    public class RaceCondition implements Runnable {
-
+    public class RaceCondition {
+        /**
+         * Счетчик.
+         */
         int counter;
-        int increaseValue;
 
-        public RaceCondition(int counter, int increaseValue) {
-            this.counter = counter;
-            this.increaseValue = increaseValue;
+        /**
+         * Флаг запуска первого потока.
+         */
+        Boolean firstFlag = false;
+
+        /**
+         * Флаг запуска второго потока.
+         */
+        Boolean secondFlag = false;
+
+        /**
+         * Устанавливает значение заданного флага true.
+         * Дожидается пока второй поток установит свой флаг,
+         * И начинает инкрементировать счетчик counter.
+         * @param flag заданный для установки флаг.
+         */
+        public void setFlag(String flag) {
+            synchronized (this) {
+                if (flag.equals("firstFlag")) {
+                    this.firstFlag = true;
+                    System.out.printf("%s установил firstFlag%n",Thread.currentThread().getName());
+                } else if (flag.equals("secondFlag")) {
+                    this.secondFlag = true;
+                    System.out.printf("%s установил secondFlag%n",Thread.currentThread().getName());
+                }
+                this.notify();
+                while (!firstFlag || !secondFlag) {
+                    try {
+                        System.out.printf("%s ждёт активацию флага%n",Thread.currentThread().getName());
+                        this.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            increment();
         }
 
         /**
-         * При параллельной работе двух потоков с использованием этого метода, у разных объектов:
-         * Очередность вывода значения счетчика в консоль непредсказуема.
+         * Инкрементирует счетчик count 10 раз.
          */
-        @Override
-        public void run() {
-            while (this.counter < 100) {
-                System.out.println(this.counter);
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                this.counter += increaseValue;
+        private void increment() {
+            for (int i = 0; i < 10; i++) {
+                System.out.printf("%s инкрементирует %s%n",Thread.currentThread().getName(), ++this.counter);
             }
         }
     }
