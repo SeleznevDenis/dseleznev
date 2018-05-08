@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
@@ -19,15 +20,18 @@ public class LockTest {
 
     @Test
     public void lockTest() {
+        ConcurrentLinkedQueue<String> result = new ConcurrentLinkedQueue<>();
         Lock lock = new Lock();
         Thread first = new Thread(() -> {
             lock.lock();
+            result.add("first get lock");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             lock.unLock();
+            result.add("first unlock lock");
         });
         Thread second = new Thread(() -> {
             try {
@@ -37,7 +41,9 @@ public class LockTest {
             }
             lock.unLock();
             lock.lock();
+            result.add("second get lock");
             lock.unLock();
+            result.add("second unlock lock");
         });
         first.setName("first");
         second.setName("second");
@@ -49,11 +55,10 @@ public class LockTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        List<String> expectLog = new ArrayList<>(asList(
-                "first: захватил lock", "second: ждет в методе lock",
-                "first: разблокировал lock", "second: захватил lock",
-                "second: разблокировал lock"
-        ));
-        assertThat(lock.getLog(), is(expectLog));
+        String[] arr = new String[4];
+        result.toArray(arr);
+        assertThat(arr, is(new String[]{
+                "first get lock", "first unlock lock", "second get lock", "second unlock lock"
+        }));
     }
 }

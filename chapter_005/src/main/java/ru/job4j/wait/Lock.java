@@ -20,22 +20,18 @@ public class Lock {
      */
     @GuardedBy("this")
     private Thread lockOwner;
-    @GuardedBy("this")
-    private List<String> log = new ArrayList<>();
 
     /**
      * Блокирует lock, если он свободен. Если другой поток владеет lock, ждёт освобождения.
      */
     public synchronized void lock() {
         while (this.lockOwner != null && !this.lockOwner.equals(Thread.currentThread())) {
-            this.log.add(String.format("%s: ждет в методе lock", Thread.currentThread().getName()));
             try {
                 this.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        this.log.add(String.format("%s: захватил lock", Thread.currentThread().getName()));
         this.lockOwner = Thread.currentThread();
     }
 
@@ -45,15 +41,7 @@ public class Lock {
     public synchronized void unLock() {
         if (this.lockOwner != null && this.lockOwner.equals(Thread.currentThread())) {
             this.lockOwner = null;
-            this.log.add(String.format("%s: разблокировал lock", Thread.currentThread().getName()));
             this.notify();
         }
-    }
-
-    /**
-     * @return log действий, происходящих в объекте log.
-     */
-    public synchronized List<String> getLog() {
-        return this.log;
     }
 }
