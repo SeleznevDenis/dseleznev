@@ -29,12 +29,15 @@ public class SimpleBlockingQueue<T> {
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
             }
         }
         this.queue.offer(value);
         this.notify();
-
+    }
+    public synchronized boolean isEmpty() {
+        return this.queue.isEmpty();
     }
 
     /**
@@ -46,7 +49,8 @@ public class SimpleBlockingQueue<T> {
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
             }
         }
         this.notify();
