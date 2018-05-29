@@ -44,31 +44,34 @@ public class Character implements Runnable {
     /**
      * Производит сдвиг персонажа, в соответствии с командой из очереди moves.
      * Проверяет возможен ли такой ход, а также свободна ли ячейка, если проверка не проходит,
-     * рекурсивно вызывает себя и получает следующую команду на сдвиг.
+     * получает следующую команду на сдвиг.
      * В случае правильного хода, и свободной ячейки - блокирует следующую ячейку и разблокирует предыдущую.
      */
     private void move() {
-        Cell move = this.moves.poll();
-        if (move != null) {
+        Cell move;
+        Boolean done = false;
+        while (!done) {
+            move = this.moves.poll();
+            if (move == null) {
+                break;
+            }
             final int newRow = this.currentCell.getRow() + move.getRow();
             final int newColumn = this.currentCell.getColumn() + move.getColumn();
-            if (newRow > 0 && newColumn > 0 && newRow <= this.currentBoard.getSize()
-                    && newColumn <= this.currentBoard.getSize()) {
+            if (newRow > 0 && newColumn > 0 && newRow < this.currentBoard.getSize()
+                    && newColumn < this.currentBoard.getSize()) {
                 Cell newCell = new Cell(newRow, newColumn);
                 ReentrantLock oldLock = this.currentBoard.getLock(this.currentCell);
                 ReentrantLock newLock = this.currentBoard.getLock(newCell);
                 try {
-                    if (!newLock.tryLock(500, TimeUnit.MILLISECONDS)) {
-                        move();
-                    } else {
+                    if (newLock.tryLock(500, TimeUnit.MILLISECONDS)) {
                         this.currentCell = newCell;
                         oldLock.unlock();
+                        done = true;
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    done = true;
                 }
-            } else {
-                move();
             }
         }
     }

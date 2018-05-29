@@ -1,5 +1,8 @@
 package ru.job4j.bomberman;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -24,10 +27,23 @@ public class Board {
 
     /**
      * Заполняет поле, объектами типа ReentrantLock.
+     * Блокирует случайные ячейки, количество которых зависит от уровня сложности.
+     * @param difficultyLevel уровень сложности.
      */
-    public void init() {
+    public void init(final int difficultyLevel) {
+        if (difficultyLevel < 0 || difficultyLevel > 10) {
+            throw new IllegalArgumentException();
+        }
+        List<Integer> difficult = new ArrayList<>();
+        for (int i = 1; i < difficultyLevel; i++) {
+            difficult.add(i);
+        }
         for (int row = 0; row < this.board.length; row++) {
             for (int column = 0; column < this.board[row].length; column++) {
+                ReentrantLock lock = new ReentrantLock();
+                if (difficult.contains((Integer) new Random().nextInt(11))) {
+                    lock.lock();
+                }
                 this.board[row][column] = new ReentrantLock();
             }
         }

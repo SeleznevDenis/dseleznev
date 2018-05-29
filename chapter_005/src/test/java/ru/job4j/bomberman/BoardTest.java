@@ -17,13 +17,32 @@ public class BoardTest {
     @Test
     public void ifInitBoardThenBoardDANullElements() {
         Board testBoard = new Board(10);
-        testBoard.init();
+        testBoard.init(0);
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 assertNotNull(testBoard.getLock(new Cell(i, j)));
             }
         }
     }
+
+    @Test
+    public void ifSetDifficultLevelThenBoardHaveLockedCells() {
+        Board testBoard = new Board(10);
+        testBoard.init(5);
+        new Thread(() -> {
+            boolean isLocked = false;
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (testBoard.getLock(new Cell(i, j)).isLocked()) {
+                        isLocked = true;
+                        break;
+                    }
+                }
+            }
+            assertThat(isLocked, is(true));
+        }).start();
+    }
+
 
     @Test
     public void ifCreateNewBoardWithSize10ThenGetSizeShouldBeReturn10() {

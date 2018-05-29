@@ -2,6 +2,8 @@ package ru.job4j.bomberman;
 
 import ru.job4j.wait.SimpleBlockingQueue;
 
+import java.util.List;
+
 /**
  * Описывает игру BomberMan.
  * @author Denis Seleznev
@@ -30,36 +32,54 @@ public class Game {
     private int threadPosition;
 
     /**
+     * Список пользовательских очередей ввода,
+     * на основе него создаются персонажи управляемые игроками.
+     */
+    private List<SimpleBlockingQueue<Cell>> inputsPlayers;
+
+    /**
      * Инициализирует размер игрового поля и количество персонажей со случайным вводом команд.
      * @param boardSize размер игрового поля.
      * @param randomInputCharacters количество персонажей со случайным вводом команд.
      */
-    Game(int boardSize, int randomInputCharacters) {
+    Game(int boardSize, int randomInputCharacters, List<SimpleBlockingQueue<Cell>> inputsPlayers) {
         this.board = new Board(boardSize);
         this.randomInputCharacters = randomInputCharacters;
-        this.allThreads = new Thread[randomInputCharacters * 2];
+        this.allThreads = new Thread[randomInputCharacters * 2 + inputsPlayers.size()];
+        this.inputsPlayers = inputsPlayers;
     }
 
     /**
      * Запускает игру: инициализирует игровое поле, запускает потоки случайного ввода команд и
-     * и потоки персонажей. Записывает все потоки в allThreads.
+     * потоки персонажей. Записывает все потоки в allThreads.
+     * @param difficultLevel уровень сложности игрового поля.
      */
-    public void startGame() {
-        this.board.init();
+    public void startGame(int difficultLevel) {
+        this.board.init(difficultLevel);
         int rowPosition = 0;
         int columnPosition = 0;
-        for (int i = 0; i < this.randomInputCharacters; i++) {
+        int userNumbers = 0;
+        for (int i = 0; i < this.randomInputCharacters + this.inputsPlayers.size(); i++) {
             if (columnPosition >= this.board.getSize()) {
                 rowPosition++;
                 columnPosition = 0;
             }
-            SimpleBlockingQueue<Cell> input = new SimpleBlockingQueue<>();
-            this.allThreads[threadPosition] = new Thread(
-                    new Character(this.board, new Cell(rowPosition, columnPosition++), input)
-            );
-            this.allThreads[threadPosition++].start();
-            this.allThreads[threadPosition] = new Thread(new RandomInput(input, 1000));
-            this.allThreads[threadPosition++].start();
+            if (i < this.randomInputCharacters) {
+                SimpleBlockingQueue<Cell> input = new SimpleBlockingQueue<>();
+                this.allThreads[threadPosition] = new Thread(
+                        new Character(this.board, new Cell(rowPosition, columnPosition++), input)
+                );
+                this.allThreads[threadPosition++].start();
+                this.allThreads[threadPosition] = new Thread(new RandomInput(input, 1000));
+                this.allThreads[threadPosition++].start();
+            } else {
+                this.allThreads[threadPosition] = new Thread(
+                        new Character(this.board, new Cell(
+                                rowPosition, columnPosition++), this.inputsPlayers.get(userNumbers++)
+                        )
+                );
+                this.allThreads[threadPosition++].start();
+            }
         }
     }
 

@@ -20,7 +20,7 @@ public class CharacterTest {
     @Test
     public void ifMoveTheCharacterItWillMove() {
         Board testBoard = new Board(10);
-        testBoard.init();
+        testBoard.init(0);
         SimpleBlockingQueue<Cell> moves = new SimpleBlockingQueue<>();
         moves.offer(new Cell(1, 1));
         moves.offer(new Cell(1, 1));

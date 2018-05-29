@@ -19,12 +19,12 @@ public class DeadLockTest {
     @Test
     public void deadLock() {
         CyclicBarrier barrier = new CyclicBarrier(2);
-        DeadLock A = new DeadLock(barrier);
-        DeadLock B = new DeadLock(barrier);
-        A.setOther(B);
-        B.setOther(A);
-        Thread first = new Thread(A);
-        Thread second = new Thread(B);
+        DeadLock a = new DeadLock(barrier);
+        DeadLock b = new DeadLock(barrier);
+        a.setOther(b);
+        b.setOther(a);
+        Thread first = new Thread(a);
+        Thread second = new Thread(b);
         first.start();
         second.start();
         try {
