@@ -1,6 +1,10 @@
 package ru.job4j.tracker;
 
+import java.io.*;
 import java.util.*;
+import java.sql.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Объект класса Tracker работает с заявками типа Item.
@@ -8,10 +12,43 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-public class Tracker {
-
-    private ArrayList<Item> items = new ArrayList<>();
+public class Tracker implements AutoCloseable {
+    private static final String QUERIES = "queries.properties";
+    public static final Logger LOGGER = LoggerFactory.getLogger(Tracker.class);
+    private Properties properties;
+    private Connection connection;
+    private PreparedStatement statement;
+    private ResultSet result;
     private static final Random RN = new Random();
+
+    public void init() {
+        try (InputStream reader = getClass().getClassLoader().getResourceAsStream(QUERIES)) {
+            this.properties = new Properties();
+            this.properties.load(reader);
+            this.statement = connectAndGetPStatement("tableCreate");
+            this.statement.execute();
+        } catch (IOException | SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            this.close();
+        }
+    }
+
+    private PreparedStatement connectAndGetPStatement(String queryName)  {
+        try {
+            this.connection = DriverManager.getConnection(
+                    this.properties.getProperty("url"),
+                    this.properties.getProperty("username"),
+                    this.properties.getProperty("password")
+            );
+            this.statement = this.connection.prepareStatement(
+                    this.properties.getProperty(queryName)
+            );
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return this.statement;
+    }
 
     /**
      * Метод реализующий добавление заявки в хранилище.
@@ -19,8 +56,21 @@ public class Tracker {
      * @return
      */
      public Item add(Item item) {
-         item.setId(this.generateId());
-         items.add(item);
+         try {
+             this.statement = connectAndGetPStatement("itemAdd");
+             if (item.getId() == null) {
+                 item.setId(this.generateId());
+             }
+             this.statement.setString(1, item.getId());
+             this.statement.setString(2, item.getName());
+             this.statement.setString(3, item.getDesc());
+             this.statement.setLong(4, item.getCreated());
+             this.statement.execute();
+         } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+         } finally {
+             close();
+         }
          return item;
      }
 
@@ -30,11 +80,17 @@ public class Tracker {
      * @param item заданная заявка.
      */
      public void replace(String id, Item item) {
-         for (Item checkedItem : this.items) {
-             if (checkedItem.getId().equals(id)) {
-                 this.items.set(this.items.indexOf(checkedItem), item);
-                 break;
-             }
+         try {
+             this.statement = connectAndGetPStatement("itemUpdate");
+             this.statement.setString(1, item.getName());
+             this.statement.setString(2, item.getDesc());
+             this.statement.setLong(3, item.getCreated());
+             this.statement.setString(4, id);
+             this.statement.execute();
+         } catch (SQLException e) {
+             LOGGER.error(e.getMessage(), e);
+         } finally {
+             close();
          }
      }
 
@@ -43,11 +99,14 @@ public class Tracker {
      * @param id
      */
      public void delete(String id) {
-         for (Item checkedItem : this.items) {
-             if (checkedItem.getId().equals(id)) {
-                 this.items.remove(checkedItem);
-                 break;
-             }
+         try {
+             this.statement = connectAndGetPStatement("itemDelete");
+             this.statement.setString(1, id);
+             this.statement.execute();
+         } catch (SQLException e) {
+             LOGGER.error(e.getMessage(), e);
+         } finally {
+             close();
          }
      }
 
@@ -56,7 +115,25 @@ public class Tracker {
      * @return массив содержащий ненулевые ссылки на объекты Item.
      */
      public ArrayList<Item> findAll() {
-        return this.items;
+         ArrayList<Item> result = new ArrayList<>();
+         try {
+             this.statement = connectAndGetPStatement("findAll");
+             this.result = this.statement.executeQuery();
+             while (this.result.next()) {
+                 Item currentItem = new Item(
+                         this.result.getString("name"),
+                         this.result.getString("description"),
+                         this.result.getLong("created")
+                 );
+                 currentItem.setId(this.result.getString("id"));
+                 result.add(currentItem);
+             }
+         } catch (SQLException e) {
+             LOGGER.error(e.getMessage(), e);
+         } finally {
+             close();
+         }
+        return result;
      }
 
     /**
@@ -66,10 +143,23 @@ public class Tracker {
      */
      public ArrayList<Item> findByName(String key) {
          ArrayList<Item> foundArr = new ArrayList<>();
-         for (Item checkedItem : this.items) {
-             if (checkedItem.getName().equals(key)) {
-                 foundArr.add(checkedItem);
+         try {
+             this.statement = connectAndGetPStatement("foundByName");
+             this.statement.setString(1, key);
+             this.result = this.statement.executeQuery();
+             while (this.result.next()) {
+                 Item currentItem = new Item(
+                         this.result.getString("name"),
+                         this.result.getString("description"),
+                         this.result.getLong("created")
+                 );
+                 currentItem.setId(this.result.getString("id"));
+                 foundArr.add(currentItem);
              }
+         } catch (SQLException e) {
+             LOGGER.error(e.getMessage(), e);
+         } finally {
+             close();
          }
          return foundArr;
      }
@@ -81,11 +171,21 @@ public class Tracker {
      */
      public Item findById(String id) {
          Item found = null;
-         for (Item checked : this.items) {
-             if (checked != null && checked.getId().equals(id)) {
-                 found = checked;
-                 break;
-             }
+         try {
+             this.statement = connectAndGetPStatement("foundById");
+             this.statement.setString(1, id);
+             this.result = this.statement.executeQuery();
+             result.next();
+             found = new Item(
+                     this.result.getString("name"),
+                     this.result.getString("description"),
+                     this.result.getLong("created")
+             );
+             found.setId(this.result.getString("id"));
+         } catch (SQLException e) {
+             LOGGER.error(e.getMessage(), e);
+         } finally {
+             close();
          }
          return found;
      }
@@ -97,4 +197,21 @@ public class Tracker {
      private String generateId() {
          return String.valueOf(System.currentTimeMillis() + RN.nextInt());
      }
+
+    @Override
+    public void close() {
+        try {
+            if (this.statement != null) {
+                this.statement.close();
+            }
+            if (this.result != null) {
+                this.result.close();
+            }
+            if (this.connection != null) {
+                this.connection.close();
+            }
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
 }

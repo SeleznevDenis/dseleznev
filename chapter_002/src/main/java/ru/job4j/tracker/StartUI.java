@@ -47,11 +47,9 @@ public class StartUI {
      * @param args
      */
     public static void main(String[] args) {
-        new StartUI(
-                new ValidateInput(
-                        new ConsoleInput()
-                ),
-                new Tracker()
-        ).init();
+        try (Tracker tracker = new Tracker()) {
+            tracker.init();
+            new StartUI(new ValidateInput(new ConsoleInput()), tracker).init();
+        }
     }
 }

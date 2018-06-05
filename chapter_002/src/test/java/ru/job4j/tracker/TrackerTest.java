@@ -1,8 +1,17 @@
 package ru.job4j.tracker;
 
+import org.junit.After;
 import org.junit.Test;
 import static org.hamcrest.core.Is.is;
+
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
+
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertNull;
 
@@ -14,15 +23,32 @@ import static org.junit.Assert.assertNull;
  */
 public class TrackerTest {
 
+    @After
+    public void cleanDB() throws IOException, SQLException {
+        Properties properties = new Properties();
+        try (InputStream reader = getClass().getClassLoader().getResourceAsStream("queries.properties")) {
+            properties.load(reader);
+        }
+        try (Connection connect = DriverManager.getConnection(
+                properties.getProperty("url"),
+                properties.getProperty("username"),
+                properties.getProperty("password")
+        )) {
+            connect.createStatement().execute("DROP TABLE tracker");
+        }
+    }
+
     /**
      * Test add.
      */
     @Test
     public void whenAddNewItemThenTrackerHasSameItem() {
-        Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        tracker.add(item);
-        assertThat(tracker.findAll().get(0), is(item));
+        try (Tracker tracker = new Tracker()) {
+            tracker.init();
+            Item item = new Item("test1", "testDescription", 123L);
+            Item expect = tracker.add(item);
+            assertThat(tracker.findAll().get(0), is(expect));
+        }
     }
 
     /**
@@ -30,13 +56,15 @@ public class TrackerTest {
      */
     @Test
     public void whenReplaceNameThenReturnNewName() {
-        Tracker tracker = new Tracker();
-        Item previous = new Item("test1", "testDescription", 123L);
-        tracker.add(previous);
-        Item next = new Item("test2", "testDescription2", 1234L);
-        next.setId(previous.getId());
-        tracker.replace(previous.getId(), next);
-        assertThat(tracker.findById(previous.getId()).getName(), is("test2"));
+        try (Tracker tracker = new Tracker()) {
+            tracker.init();
+            Item previous = new Item("test1", "testDescription", 123L);
+            tracker.add(previous);
+            Item next = new Item("test2", "testDescription2", 1234L);
+            next.setId(previous.getId());
+            tracker.replace(previous.getId(), next);
+            assertThat(tracker.findById(previous.getId()).getName(), is("test2"));
+        }
     }
 
     /**
@@ -44,11 +72,13 @@ public class TrackerTest {
      */
     @Test
     public void whenDeleteCheckedItemThenThisItemNull() {
-        Tracker tracker = new Tracker();
-        Item checked = new Item("test3", "testDescription3", 12345L);
-        tracker.add(checked);
-        tracker.delete(checked.getId());
-        assertNull(tracker.findById(checked.getId()));
+        try (Tracker tracker = new Tracker()) {
+            tracker.init();
+            Item checked = new Item("test3", "testDescription3", 12345L);
+            tracker.add(checked);
+            tracker.delete(checked.getId());
+            assertNull(tracker.findById(checked.getId()));
+        }
     }
 
     /**
@@ -56,15 +86,17 @@ public class TrackerTest {
      */
     @Test
     public void whenItemsHasTwoNotNullItemThenFindAllReturnArrayWithTwoItems() {
-        Tracker tracker = new Tracker();
-        Item first = new Item("test4", "testDescription4", 5454L);
-        Item second = new Item("test5", "testDescription5", 54L);
-        tracker.add(first);
-        tracker.add(second);
-        ArrayList<Item> itemsResult = tracker.findAll();
-        String[] except = {"test4", "test5"};
-        String[] result = {itemsResult.get(0).getName(), itemsResult.get(itemsResult.size() - 1).getName()};
-        assertThat(result, is(except));
+        try (Tracker tracker = new Tracker()) {
+            tracker.init();
+            Item first = new Item("test4", "testDescription4", 5454L);
+            Item second = new Item("test5", "testDescription5", 54L);
+            tracker.add(first);
+            tracker.add(second);
+            ArrayList<Item> itemsResult = tracker.findAll();
+            String[] except = {"test4", "test5"};
+            String[] result = {itemsResult.get(0).getName(), itemsResult.get(itemsResult.size() - 1).getName()};
+            assertThat(result, is(except));
+        }
     }
 
     /**
@@ -72,10 +104,12 @@ public class TrackerTest {
      */
     @Test
     public void ifFindByNameTest6ThenReturnItemWithNameTest6() {
-        Tracker tracker = new Tracker();
-        Item testItem = new Item("Test6", "textDescription", 87L);
-        tracker.add(testItem);
-        assertThat(tracker.findByName("Test6").get(0), is(testItem));
+        try (Tracker tracker = new Tracker()) {
+            tracker.init();
+            Item testItem = new Item("Test6", "textDescription", 87L);
+            tracker.add(testItem);
+            assertThat(tracker.findByName("Test6").get(0), is(testItem));
+        }
     }
 
     /**
@@ -83,9 +117,11 @@ public class TrackerTest {
      */
     @Test
     public void ifFindByIdItemThenReturnItemWithThisId() {
-        Tracker tracker = new Tracker();
-        Item testItem = new Item("test", "testDesc", 8L);
-        tracker.add(testItem);
-        assertThat(tracker.findById(testItem.getId()), is(testItem));
+        try (Tracker tracker = new Tracker()) {
+            tracker.init();
+            Item testItem = new Item("test", "testDesc", 8L);
+            Item expect = tracker.add(testItem);
+            assertThat(tracker.findById(expect.getId()), is(expect));
+        }
     }
 }
