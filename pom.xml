@@ -19,6 +19,7 @@
         <module>chapter_003</module>
         <module>chapter_004</module>
         <module>chapter_005</module>
+        <module>chapter_006</module>
     </modules>
 	
 	<dependencies>
@@ -57,6 +58,12 @@
             <artifactId>slf4j-nop</artifactId>
             <version>1.8.0-alpha2</version>
             <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.21.0.1</version>
         </dependency>
     </dependencies>
 	<build>
