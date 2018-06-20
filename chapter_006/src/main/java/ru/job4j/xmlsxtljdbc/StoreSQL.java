@@ -1,4 +1,4 @@
-package xmlsxtljdbc;
+package ru.job4j.xmlsxtljdbc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,12 @@ import java.util.Properties;
  * @version $Id$
  * @since 10.06.2018
  */
-public class StoreSQL {
+public class StoreSQL implements AutoCloseable {
+
     /**
-     * Хранит настройки подключения к базе данных.
+     * slf4j логгер.
      */
-    private Properties config;
+    private final static Logger LOGGER = LoggerFactory.getLogger(StoreSQL.class);
 
     /**
      * Хранит SQL запросы.
@@ -27,9 +28,9 @@ public class StoreSQL {
     private final Properties queries = new Properties();
 
     /**
-     * slf4j логгер.
+     * Хранит настройки подключения к базе данных.
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(StoreSQL.class);
+    private Properties config;
 
     /**
      * Инициализирует настройки подключения к базе данных.
@@ -39,13 +40,15 @@ public class StoreSQL {
         this.config = config;
     }
 
+    private Connection connect;
+
     /**
      * Инициализирует properties содержащий запросы SQL.
      * Создает таблицу entry в базе данных при её отсутствии,
      * очищает таблицу entry если в ней были данные,
      */
     public void init() {
-        Connection connect = connectDB();
+        this.connectDB();
         try (InputStream reader = getClass().getClassLoader().getResourceAsStream("queries.properties");
              Statement statement = connect.createStatement()) {
             this.queries.load(reader);
@@ -56,32 +59,24 @@ public class StoreSQL {
         } catch (IOException | SQLException e) {
             this.dbRollback(connect);
             LOGGER.error(e.getMessage(), e);
-        } finally {
-            try {
-                connect.close();
-            } catch (SQLException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
         }
     }
 
     /**
      * Подключается к базе данных, отключает режим AutoCommit
-     * @return Ссылка на объект Connection
      */
-    private Connection connectDB() {
-        Connection currentConnection = null;
+    private void connectDB() {
         try {
-            currentConnection = DriverManager.getConnection(
+            Connection currentConnection = DriverManager.getConnection(
                     config.getProperty("url"),
                     config.getProperty("username"),
                     config.getProperty("password")
             );
             currentConnection.setAutoCommit(false);
+            this.connect = currentConnection;
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        return currentConnection;
     }
 
     /**
@@ -103,8 +98,7 @@ public class StoreSQL {
      * @param n заданный предел.
      */
     public void generate(int n) {
-        Connection connect = connectDB();
-        try (PreparedStatement statement = connect.prepareStatement(queries.getProperty("addElement"))) {
+        try (PreparedStatement statement = this.connect.prepareStatement(queries.getProperty("addElement"))) {
             for (int i = 0; i < n; i++) {
                 statement.setInt(1, i);
                 statement.addBatch();
@@ -114,12 +108,6 @@ public class StoreSQL {
         } catch (SQLException e) {
             dbRollback(connect);
             LOGGER.error(e.getMessage(), e);
-        } finally {
-            try {
-                connect.close();
-            } catch (SQLException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
         }
     }
 
@@ -129,8 +117,7 @@ public class StoreSQL {
      */
     public List<StoreXML.Entry> getData() {
         List<StoreXML.Entry> result = new ArrayList<>();
-        Connection connect = connectDB();
-        try (Statement statement = connect.createStatement();
+        try (Statement statement = this.connect.createStatement();
              ResultSet resultSet = statement.executeQuery(this.queries.getProperty("getData"))) {
             while (resultSet.next()) {
                 result.add(new StoreXML.Entry(resultSet.getInt("field")));
@@ -139,5 +126,16 @@ public class StoreSQL {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public void close() {
+        if (this.connect != null) {
+            try {
+                this.connect.close();
+            } catch (SQLException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-package xmlsxtljdbc;
+package ru.job4j.xmlsxtljdbc;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

@@ -1,6 +1,7 @@
-package xmlsxtljdbc;
+package ru.job4j.xmlsxtljdbc;
 
 import org.junit.Test;
+import ru.job4j.xmlsxtljdbc.StoreXML;
 
 import java.io.File;
 import java.io.FileNotFoundException;

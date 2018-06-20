@@ -1,5 +1,7 @@
-package xmlsxtljdbc;
+package ru.job4j.xmlsxtljdbc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.*;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,6 +17,8 @@ import java.io.IOException;
  * @since 10.06.2018
  */
 public class ParseCounter {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(StoreSQL.class);
     /**
      * Счетчик.
      */
@@ -33,7 +37,7 @@ public class ParseCounter {
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
-        System.out.println(this.counter);
+        LOGGER.info("this.counter");
         return this.counter;
     }
 
