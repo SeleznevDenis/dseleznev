@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 /**
  * My first servlet.
  * @author Denis Seleznev
- * @version %Id%
+ * @version $Id$
  * @since 0.1
  */
 public class EchoServlet extends HttpServlet {
