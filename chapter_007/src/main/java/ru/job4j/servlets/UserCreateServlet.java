@@ -1,10 +1,13 @@
 package ru.job4j.servlets;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * Сервлет добавляющий пользователя в систему.
@@ -19,57 +22,39 @@ public class UserCreateServlet extends HttpServlet {
      */
     private final ValidateService validator = ValidateService.getInstance();
 
+    private static final Logger LOG = LogManager.getLogger("Servlet");
+
     /**
      * Отображает на странице форму для создания пользователя.
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/html");
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        writer.print(this.getHtmlPage(req.getContextPath(), "Fill the form"));
-        writer.flush();
-    }
-
-    /**
-     * Возвращает HTML текст страницы ввода пользователя.
-     * @param contextPatch адрес корня сайта.
-     * @param message сообщение для отображения.
-     * @return HTML текст в строке.
-     */
-    private String getHtmlPage(String contextPatch, String message) {
-        return "<!DOCTYPE html>"
-                + "<html lang='en'>"
-                + "<head>"
-                + "    <meta charset='UTF-8'>"
-                + "    <title>Create user</title>"
-                + "</head>"
-                + "<body>"
-                + message
-                + "<form action ='" + contextPatch + "/create' method='post'>"
-                + "    Login:<input type='text' name='login'/><br>"
-                + "    Name:<input type='text' name='name'/><br>"
-                + "    Email:<input type='text' name='email'/><br>"
-                + "    <input type='submit' >"
-                + "</form>"
-                + "</body>"
-                + "</html>";
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            resp.sendRedirect(String.format("%s/create_user.jsp", req.getContextPath()));
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
 
     /**
      * Выполняет добавление пользователя в систему.
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        resp.setContentType("text/html");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String name = req.getParameter("name");
         String login = req.getParameter("login");
         String email = req.getParameter("email");
+        String message;
         if (this.validator.add(new User(name, login, email))) {
-            writer.append(this.getHtmlPage(req.getContextPath(), "User was added"));
+            message = "User was added";
         } else {
-            writer.append(this.getHtmlPage(req.getContextPath(), "Incorrect input data, please try again."));
+            message = "Incorrect input data, please try again.";
         }
-        writer.flush();
+        req.setAttribute("message", message);
+        try {
+            req.getRequestDispatcher("/create_user.jsp").forward(req, resp);
+        } catch (ServletException | IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
 }
