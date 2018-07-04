@@ -37,7 +37,7 @@ public class UserUpdateServlet extends HttpServlet {
             req.setAttribute("message", "User not found");
         }
         try {
-            req.getRequestDispatcher("/update.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/update.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
             LOG.error(e.getMessage(), e);
         }
@@ -57,7 +57,8 @@ public class UserUpdateServlet extends HttpServlet {
         String message = this.validator.update(updatedUser) ? "User successfully updated" : "User not found";
         req.setAttribute("message", message);
         try {
-            req.getRequestDispatcher("/users.jsp").forward(req, resp);
+            req.setAttribute("users", this.validator.findAll());
+            req.getRequestDispatcher("/WEB-INF/views/users.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
            LOG.error(e.getMessage(), e);
         }

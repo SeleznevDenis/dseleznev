@@ -30,8 +30,8 @@ public class UserCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.sendRedirect(String.format("%s/create_user.jsp", req.getContextPath()));
-        } catch (IOException e) {
+            req.getRequestDispatcher("/WEB-INF/views/create_user.jsp").forward(req, resp);
+        } catch (IOException | ServletException e) {
             LOG.error(e.getMessage(), e);
         }
     }
@@ -52,7 +52,7 @@ public class UserCreateServlet extends HttpServlet {
         }
         req.setAttribute("message", message);
         try {
-            req.getRequestDispatcher("/create_user.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/create_user.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
             LOG.error(e.getMessage(), e);
         }

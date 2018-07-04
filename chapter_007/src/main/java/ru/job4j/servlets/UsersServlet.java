@@ -27,8 +27,13 @@ public class UsersServlet extends HttpServlet {
      * Отображает страницу с таблицей пользователей и кнопками редактирования и удаления.
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.sendRedirect(String.format("%s/users.jsp", req.getContextPath()));
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)  {
+        try {
+            req.setAttribute("users", this.validator.findAll());
+            req.getRequestDispatcher("/WEB-INF/views/users.jsp").forward(req, resp);
+        } catch (ServletException | IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
     }
 
     /**
@@ -47,8 +52,9 @@ public class UsersServlet extends HttpServlet {
             }
         }
         req.setAttribute("message", message);
+        req.setAttribute("users", this.validator.findAll());
         try {
-            req.getRequestDispatcher("/users.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/views/users.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
             LOG.error(e.getMessage(), e);
         }
