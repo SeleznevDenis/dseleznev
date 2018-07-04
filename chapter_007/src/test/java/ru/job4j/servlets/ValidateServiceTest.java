@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
@@ -20,18 +21,12 @@ import static org.junit.Assert.assertThat;
 public class ValidateServiceTest {
 
     private ValidateService testValidator = ValidateService.getInstance();
-    private User firstTestUser;
-    private User secondTestUser;
 
-    @Before
-    public void setUp() {
-        this.firstTestUser = new User("first", "test", "test");
-        this.secondTestUser = new User("second", "test", "test");
-    }
     @After
-    public void clearTestStore() {
-        this.testValidator.delete(this.firstTestUser.getId());
-        this.testValidator.delete(this.secondTestUser.getId());
+    public void cleanBase() {
+        for (User user : this.testValidator.findAll()) {
+            testValidator.delete(user.getId());
+        }
     }
 
     @Test
@@ -42,45 +37,52 @@ public class ValidateServiceTest {
 
     @Test
     public void ifAddUserInToStoreThenStoreShouldHaveUser() {
-        assertThat(this.testValidator.add(this.firstTestUser), is(true));
-        assertThat(this.testValidator.add(new User()), is(false));
-        assertThat(this.testValidator.findById(this.firstTestUser.getId()), is(this.firstTestUser));
+        User badUser = new User();
+        badUser.setName("test");
+        boolean addGoodUser = this.testValidator.add(new User("validateTest", "test", "test"));
+        boolean containsUser = false;
+        for (User user : this.testValidator.findAll()) {
+            if (user.getName().equals("validateTest")) {
+                containsUser = true;
+            }
+        }
+        assertThat(this.testValidator.add(badUser), is(false));
+        assertThat(addGoodUser, is(true));
+        assertThat(containsUser, is(true));
     }
 
     @Test
     public void ifUpdateUserThenUserFieldsMustBeUpdated() {
-        this.testValidator.add(this.firstTestUser);
-        this.secondTestUser.setId(this.firstTestUser.getId());
-        User thirdUser = new User();
-        int nonexistentId = 0;
+        this.testValidator.add(new User("testValidator", "test", "test"));
+        int userId = 0;
         for (User user : this.testValidator.findAll()) {
-            if (nonexistentId < user.getId()) {
-                nonexistentId = user.getId();
+            if (user.getName().equals("testValidator")) {
+                userId = user.getId();
+                break;
             }
         }
-        nonexistentId++;
-        thirdUser.setId(nonexistentId);
-        assertThat(this.testValidator.update(this.secondTestUser), is(true));
-        assertThat(this.testValidator.findById(this.firstTestUser.getId()), is(this.secondTestUser));
-        assertThat(this.testValidator.update(thirdUser), is(false));
+        User up = new User("up", "up", "up");
+        up.setId(userId);
+        boolean upResult = this.testValidator.update(up);
+        User dontUp = new User();
+        dontUp.setId(userId + 1);
+        assertThat(upResult, is(true));
+        assertThat(this.testValidator.update(dontUp), is(false));
+        assertThat(this.testValidator.findById(userId).getName(), is("up"));
     }
 
     @Test
     public void ifDeleteUserThenStoreShouldNotContainUser() {
-        this.testValidator.add(this.firstTestUser);
-        assertThat(this.testValidator.delete(this.firstTestUser.getId()), is(true));
-        assertNull(this.testValidator.findById(this.firstTestUser.getId()));
-        assertThat(this.testValidator.delete(this.firstTestUser.getId()), is(false));
-    }
-
-    @Test
-    public void findAllMustReturnAllUsersFromStore() {
-        this.testValidator.add(firstTestUser);
-        this.testValidator.add(secondTestUser);
-        assertThat(
-                this.testValidator.findAll(), is(
-                        new ArrayList<>(asList(this.firstTestUser, this.secondTestUser))
-                )
-        );
+        this.testValidator.add(new User("test", "test", "test"));
+        int userId = 0;
+        for (User user : this.testValidator.findAll()) {
+            if (user.getName().equals("test")) {
+                userId = user.getId();
+                break;
+            }
+        }
+        assertThat(this.testValidator.delete(userId), is(true));
+        assertNull(this.testValidator.findById(userId));
+        assertThat(this.testValidator.delete(userId), is(false));
     }
 }

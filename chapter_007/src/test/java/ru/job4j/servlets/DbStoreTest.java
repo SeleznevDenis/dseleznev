@@ -41,11 +41,11 @@ public class DbStoreTest {
             e.printStackTrace();
         }
     }
-@Ignore
+
     @After
     public void clean() throws SQLException {
         try (Statement st = this.connect.createStatement()) {
-            st.execute("DELETE FROM users WHERE name = 'test'");
+            st.execute("DELETE FROM users WHERE login = 'test'");
         } finally {
             if (this.connect != null) {
                 this.connect.close();

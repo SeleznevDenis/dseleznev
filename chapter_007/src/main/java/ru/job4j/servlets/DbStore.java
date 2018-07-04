@@ -40,6 +40,7 @@ public class DbStore implements Store {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
+        SOURCE.setDriverClassName("org.postgresql.Driver");
         SOURCE.setUrl(PROPS.getProperty("url"));
         SOURCE.setUsername(PROPS.getProperty("user"));
         SOURCE.setPassword(PROPS.getProperty("password"));
@@ -182,8 +183,9 @@ public class DbStore implements Store {
              PreparedStatement st = con.prepareStatement(PROPS.getProperty("findById"))) {
             st.setInt(1, id);
             try (ResultSet rstSet = st.executeQuery()) {
-                rstSet.next();
-                user = this.createUserFromRstSet(rstSet);
+                if (rstSet.next()) {
+                    user = this.createUserFromRstSet(rstSet);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

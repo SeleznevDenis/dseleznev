@@ -1,5 +1,8 @@
 package ru.job4j.servlets;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -13,7 +16,7 @@ public class ValidateService {
     /**
      * Ссылка на обертку над хранилищем пользователей
      */
-    private final Store store = MemoryStore.getInstance();
+    private final Store store = DbStore.getInstance();
 
     /**
      * Инстанс ValidateService.
@@ -43,6 +46,9 @@ public class ValidateService {
                 && !newUser.getName().equals("")
                 && !newUser.getLogin().equals("")
                 && !newUser.getEmail().equals("")) {
+            Calendar currentDate = new GregorianCalendar();
+            currentDate.setTime(new Date());
+            newUser.setCreateDate(currentDate);
             this.store.add(newUser);
             done = true;
         }
