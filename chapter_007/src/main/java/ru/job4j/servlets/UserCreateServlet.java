@@ -44,13 +44,17 @@ public class UserCreateServlet extends HttpServlet {
         String name = req.getParameter("name");
         String login = req.getParameter("login");
         String email = req.getParameter("email");
-        String message;
-        if (this.validator.add(new User(name, login, email))) {
+        String role = req.getParameter("role");
+        String password = req.getParameter("password");
+        String message = "";
+        String error = "";
+        if (this.validator.add(new User(name, login, email, role, password))) {
             message = "User was added";
         } else {
-            message = "Incorrect input data, please try again.";
+            error = "Incorrect input data, please try again.";
         }
         req.setAttribute("message", message);
+        req.setAttribute("error", error);
         try {
             req.getRequestDispatcher("/WEB-INF/views/create_user.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {

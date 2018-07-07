@@ -39,20 +39,35 @@ public class ValidateService {
      */
     public boolean add(final User newUser) {
         boolean done = false;
-        if (newUser != null
-                && newUser.getName() != null
-                && newUser.getLogin() != null
-                && newUser.getEmail() != null
-                && !newUser.getName().equals("")
-                && !newUser.getLogin().equals("")
-                && !newUser.getEmail().equals("")) {
+        if (checkUser(newUser)) {
+            done = true;
+            for (User checkedUser : this.findAll()) {
+                if (checkedUser.getLogin().equals(newUser.getLogin())) {
+                    done = false;
+                    break;
+                }
+            }
+        }
+        if (done) {
             Calendar currentDate = new GregorianCalendar();
             currentDate.setTime(new Date());
             newUser.setCreateDate(currentDate);
             this.store.add(newUser);
-            done = true;
         }
         return done;
+    }
+
+    private boolean checkUser(User usr) {
+        return usr != null
+                && usr.getName() != null
+                && usr.getLogin() != null
+                && usr.getEmail() != null
+                && usr.getPassword() != null
+                && usr.getRole() != null
+                && !usr.getPassword().equals("")
+                && !usr.getName().equals("")
+                && !usr.getLogin().equals("")
+                && !usr.getEmail().equals("");
     }
 
     /**
@@ -62,10 +77,7 @@ public class ValidateService {
      */
     public boolean update(final User newUser) {
         boolean done = false;
-        if (this.store.findById(newUser.getId()) != null
-                && newUser.getName() != null
-                && newUser.getLogin() != null
-                && newUser.getEmail() != null) {
+        if (this.store.findById(newUser.getId()) != null && checkUser(newUser)) {
             this.store.update(newUser);
             done = true;
         }

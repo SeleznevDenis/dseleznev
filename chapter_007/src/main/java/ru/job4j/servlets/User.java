@@ -25,6 +25,10 @@ public class User {
      */
     private String login;
 
+    private String password;
+
+    private Role role;
+
     /**
      * Адрес электронной почты пользователя.
      */
@@ -41,10 +45,12 @@ public class User {
      * @param login логин.
      * @param email адрес электронной почты.
      */
-    public User(String name, String login, String email) {
+    public User(String name, String login, String email, String role, String password) {
         this.name = name;
         this.login = login;
         this.email = email;
+        this.setRole(role);
+        this.password = password;
     }
 
     /**
@@ -64,6 +70,13 @@ public class User {
     }
 
     public User() {
+    }
+
+
+
+    enum Role {
+        ADMINISTRATOR,
+        USER
     }
 
     @Override
@@ -125,5 +138,21 @@ public class User {
 
     public void setCreateDate(Calendar createDate) {
         this.createDate = createDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role.toString();
+    }
+
+    public void setRole(String role) {
+        this.role = Enum.valueOf(Role.class, role.toUpperCase());
     }
 }

@@ -44,14 +44,16 @@ public class UsersServlet extends HttpServlet {
         String deletingUserId = req.getParameter("id");
         resp.setContentType("text/html");
         String message = "";
+        String error = "";
         if (deletingUserId != null) {
             if (this.validator.delete(Integer.parseInt(deletingUserId))) {
                 message = "User was deleted";
             } else {
-                message = "User not found";
+                error = "User not found";
             }
         }
         req.setAttribute("message", message);
+        req.setAttribute("error", error);
         req.setAttribute("users", this.validator.findAll());
         try {
             req.getRequestDispatcher("/WEB-INF/views/users.jsp").forward(req, resp);

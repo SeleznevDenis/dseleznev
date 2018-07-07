@@ -39,7 +39,7 @@ public class ValidateServiceTest {
     public void ifAddUserInToStoreThenStoreShouldHaveUser() {
         User badUser = new User();
         badUser.setName("test");
-        boolean addGoodUser = this.testValidator.add(new User("validateTest", "test", "test"));
+        boolean addGoodUser = this.testValidator.add(new User("validateTest", "test", "test", "user", "test"));
         boolean containsUser = false;
         for (User user : this.testValidator.findAll()) {
             if (user.getName().equals("validateTest")) {
@@ -53,7 +53,7 @@ public class ValidateServiceTest {
 
     @Test
     public void ifUpdateUserThenUserFieldsMustBeUpdated() {
-        this.testValidator.add(new User("testValidator", "test", "test"));
+        this.testValidator.add(new User("testValidator", "test", "test", "user", "test"));
         int userId = 0;
         for (User user : this.testValidator.findAll()) {
             if (user.getName().equals("testValidator")) {
@@ -61,7 +61,7 @@ public class ValidateServiceTest {
                 break;
             }
         }
-        User up = new User("up", "up", "up");
+        User up = new User("up", "up", "up", "user", "test");
         up.setId(userId);
         boolean upResult = this.testValidator.update(up);
         User dontUp = new User();
@@ -73,7 +73,7 @@ public class ValidateServiceTest {
 
     @Test
     public void ifDeleteUserThenStoreShouldNotContainUser() {
-        this.testValidator.add(new User("test", "test", "test"));
+        this.testValidator.add(new User("test", "test", "test", "user", "test"));
         int userId = 0;
         for (User user : this.testValidator.findAll()) {
             if (user.getName().equals("test")) {

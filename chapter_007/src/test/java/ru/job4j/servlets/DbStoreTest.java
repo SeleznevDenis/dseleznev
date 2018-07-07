@@ -20,8 +20,8 @@ public class DbStoreTest {
 
     private final DbStore testStore = DbStore.getInstance();
     private Connection connect;
-    private User first = new User("test", "test", "test");
-    private User second = new User("test", "test", "test");
+    private User first = new User("test", "test", "test", "user", "test");
+    private User second = new User("test", "test", "test", "user", "test");
 
     @Before
     public void setUp() {
@@ -83,7 +83,7 @@ public class DbStoreTest {
                 rstSet.next();
                 userId = rstSet.getInt("id");
             }
-            User userUpdated = new User("test", "test", "test");
+            User userUpdated = new User("test", "test", "test", "user", "test");
             userUpdated.setId(userId);
             this.testStore.update(userUpdated);
             try (ResultSet rstSet = st.executeQuery("SELECT name, login, email FROM users WHERE id =" + userId)) {
@@ -127,7 +127,7 @@ public class DbStoreTest {
         }
         List<User> result = this.testStore.findAll();
         List<User> expect = new ArrayList<>(asList(first, second));
-        assertThat(result, is(expect));
+        assertThat(result.containsAll(expect), is(true));
     }
 
     @Test

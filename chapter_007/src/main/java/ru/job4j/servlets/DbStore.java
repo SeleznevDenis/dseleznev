@@ -47,21 +47,23 @@ public class DbStore implements Store {
         SOURCE.setMinIdle(5);
         SOURCE.setMaxIdle(10);
         SOURCE.setMaxOpenPreparedStatements(100);
-        createTable();
+        createTableAndRootUser();
     }
 
     /**
      * Создает таблицу в базе данных при инициализации класса DbStore
      * Если таблицы не существует.
      */
-    private static void createTable() {
+    private static void createTableAndRootUser() {
         try (Connection connect = SOURCE.getConnection();
              Statement st = connect.createStatement()) {
             st.execute(PROPS.getProperty("createTable"));
+            st.execute(PROPS.getProperty("insertRoot"));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Конструктор закрыт, т.к. используется шаблон "Одиночка".
@@ -90,6 +92,8 @@ public class DbStore implements Store {
             st.setString(2, user.getLogin());
             st.setString(3, user.getEmail());
             st.setTimestamp(4, new Timestamp(user.getCreateDate().getTimeInMillis()));
+            st.setString(5, user.getPassword());
+            st.setString(6, user.getRole());
             st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -109,7 +113,9 @@ public class DbStore implements Store {
             st.setString(1, newUser.getName());
             st.setString(2, newUser.getLogin());
             st.setString(3, newUser.getEmail());
-            st.setInt(4, newUser.getId());
+            st.setString(4, newUser.getPassword());
+            st.setString(5, newUser.getRole());
+            st.setInt(6, newUser.getId());
             st.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -150,6 +156,8 @@ public class DbStore implements Store {
                 rst.getTimestamp("create_date").getTime()
         );
         usr.setCreateDate(createDate);
+        usr.setPassword(rst.getString("password"));
+        usr.setRole(rst.getString("role"));
         return usr;
     }
 

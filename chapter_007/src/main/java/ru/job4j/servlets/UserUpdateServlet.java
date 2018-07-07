@@ -51,11 +51,20 @@ public class UserUpdateServlet extends HttpServlet {
         User updatedUser = new User(
                 req.getParameter("name"),
                 req.getParameter("login"),
-                req.getParameter("email")
+                req.getParameter("email"),
+                req.getParameter("role"),
+                req.getParameter("password")
         );
         updatedUser.setId(Integer.parseInt(req.getParameter("id")));
-        String message = this.validator.update(updatedUser) ? "User successfully updated" : "User not found";
+        String message = "";
+        String error = "";
+        if (this.validator.update(updatedUser)) {
+            message = "User successfully updated";
+        } else {
+            error = "User not updated";
+        }
         req.setAttribute("message", message);
+        req.setAttribute("error", error);
         try {
             req.setAttribute("users", this.validator.findAll());
             req.getRequestDispatcher("/WEB-INF/views/users.jsp").forward(req, resp);
