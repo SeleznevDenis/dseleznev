@@ -4,6 +4,8 @@ language: java
 sudo: false
 services:
   - postgresql
+addons:
+  postgresql: "9.6"
 before_script:
   - psql -c 'create database tracker;' -U postgres
 # после выполнения сборки запустить скрипт, который будет собирать статистику по JaCoCo

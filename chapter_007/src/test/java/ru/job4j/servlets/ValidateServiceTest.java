@@ -25,7 +25,9 @@ public class ValidateServiceTest {
     @After
     public void cleanBase() {
         for (User user : this.testValidator.findAll()) {
-            testValidator.delete(user.getId());
+            if (user.getId() != 0) {
+                testValidator.delete(user.getId());
+            }
         }
     }
 

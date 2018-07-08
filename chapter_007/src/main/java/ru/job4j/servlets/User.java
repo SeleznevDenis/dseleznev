@@ -153,6 +153,8 @@ public class User {
     }
 
     public void setRole(String role) {
-        this.role = Enum.valueOf(Role.class, role.toUpperCase());
+        if (role != null) {
+            this.role = Enum.valueOf(Role.class, role.toUpperCase());
+        }
     }
 }

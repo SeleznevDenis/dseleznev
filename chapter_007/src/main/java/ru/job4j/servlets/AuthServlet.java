@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Авторизатор.
@@ -82,6 +83,24 @@ public class AuthServlet extends HttpServlet {
 
         public String getRole() {
             return role;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            LoginRole loginRole = (LoginRole) o;
+            return Objects.equals(login, loginRole.login)
+                    && Objects.equals(role, loginRole.role);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(login, role);
         }
     }
 }
