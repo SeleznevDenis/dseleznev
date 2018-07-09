@@ -25,6 +25,7 @@ public class MemoryStore implements Store {
      * Хранилище пользователей.
      */
     private final Map<Integer, User> userStorage = new ConcurrentHashMap<>();
+    private final Map<String, Integer> loginId = new ConcurrentHashMap<>();
 
     /**
      * Инстанс класса.
@@ -50,6 +51,7 @@ public class MemoryStore implements Store {
         final int userId = this.counter.incrementAndGet();
         newUser.setId(userId);
         this.userStorage.put(userId, newUser);
+        this.loginId.put(newUser.getLogin(), userId);
     }
 
     /**
@@ -58,7 +60,9 @@ public class MemoryStore implements Store {
      */
     @Override
     public void update(final User newUser) {
-        this.userStorage.replace(newUser.getId(), newUser);
+        User replacedUser = this.userStorage.replace(newUser.getId(), newUser);
+        this.loginId.remove(replacedUser.getLogin());
+        this.loginId.put(newUser.getLogin(), newUser.getId());
     }
 
     /**
@@ -67,7 +71,10 @@ public class MemoryStore implements Store {
      */
     @Override
     public void delete(final int userId) {
-        this.userStorage.remove(userId);
+        User removedUser = this.userStorage.remove(userId);
+        if (removedUser != null) {
+            this.loginId.remove(removedUser.getLogin());
+        }
     }
 
     /**
@@ -86,5 +93,10 @@ public class MemoryStore implements Store {
     @Override
     public User findById(final int id) {
         return this.userStorage.get(id);
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        return this.userStorage.get(this.loginId.get(login));
     }
 }

@@ -59,8 +59,9 @@ public class DbStore implements Store {
              Statement st = connect.createStatement()) {
             st.execute(PROPS.getProperty("createTable"));
             st.execute(PROPS.getProperty("insertRoot"));
+            st.execute(PROPS.getProperty("createIndex"));
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -77,6 +78,32 @@ public class DbStore implements Store {
     public static DbStore getInstance() {
         return INSTANCE;
     }
+
+    /**
+     * Ищет пользователя по логину.
+     * @param login логин искомого пользователя.
+     * @return найденный пользователь.
+     */
+    @Override
+    public User findByLogin(String login) {
+        User foundUser = null;
+        try (Connection connect = SOURCE.getConnection();
+             PreparedStatement st = connect.prepareStatement(
+                     PROPS.getProperty("findByLogin")
+             )) {
+            st.setString(1, login);
+            try (ResultSet rstSet = st.executeQuery()) {
+                if (rstSet.next()) {
+                    foundUser = this.createUserFromRstSet(rstSet);
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return foundUser;
+    }
+
+
 
     /**
      * Добавляет пользователя в базу данных.
@@ -96,7 +123,7 @@ public class DbStore implements Store {
             st.setString(6, user.getRole());
             st.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -118,7 +145,7 @@ public class DbStore implements Store {
             st.setInt(6, newUser.getId());
             st.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
 
     }
@@ -136,7 +163,7 @@ public class DbStore implements Store {
             st.setInt(1, userId);
             st.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -174,7 +201,7 @@ public class DbStore implements Store {
                 resultList.add(this.createUserFromRstSet(rst));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
         return resultList;
     }
@@ -196,7 +223,7 @@ public class DbStore implements Store {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
         return user;
     }

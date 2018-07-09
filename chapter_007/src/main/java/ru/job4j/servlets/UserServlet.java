@@ -1,5 +1,7 @@
 package ru.job4j.servlets;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.job4j.servlets.UserServlet.Message.Type;
 
 import javax.servlet.http.HttpServlet;
@@ -17,6 +19,7 @@ import java.util.function.Function;
  * @since 0.1
  */
 public class UserServlet extends HttpServlet {
+    private final static Logger LOG = LogManager.getLogger("servlets");
 
     /**
      * Ссылка на объект ValidateService.
@@ -42,18 +45,22 @@ public class UserServlet extends HttpServlet {
      * @param resp ответ.
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType("text/html");
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        writer.append("All users:");
-        for (User currentUser : this.validator.findAll()) {
-            writer.println(String.format(
-                    "Id: %s, Name: %s, Login: %s, Email: %s",
-                    currentUser.getId(), currentUser.getName(), currentUser.getLogin(),
-                    currentUser.getEmail()
-            ));
+        try {
+            PrintWriter writer = new PrintWriter(resp.getOutputStream());
+            writer.append("All users:");
+            for (User currentUser : this.validator.findAll()) {
+                writer.println(String.format(
+                        "Id: %s, Name: %s, Login: %s, Email: %s",
+                        currentUser.getId(), currentUser.getName(), currentUser.getLogin(),
+                        currentUser.getEmail()
+                ));
+            }
+            writer.flush();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
         }
-        writer.flush();
     }
 
     /**
@@ -64,7 +71,7 @@ public class UserServlet extends HttpServlet {
      *                    Action not performed - в случае когда действие выполнить неудалось.
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         Message msg = new Message(
                 req.getParameter("action"),
                 req.getParameter("id"),
@@ -72,14 +79,19 @@ public class UserServlet extends HttpServlet {
                 req.getParameter("login"),
                 req.getParameter("email")
         );
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        resp.setContentType("text/html");
-        if (this.dispatch.sent(msg)) {
-            writer.append("Done");
-        } else {
-            writer.append("Action not performed");
+        try {
+            PrintWriter writer = new PrintWriter(resp.getOutputStream());
+            resp.setContentType("text/html");
+            if (this.dispatch.sent(msg)) {
+                writer.append("Done");
+            } else {
+                writer.append("Action not performed");
+            }
+            writer.flush();
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
         }
-        writer.flush();
+
     }
 
     /**

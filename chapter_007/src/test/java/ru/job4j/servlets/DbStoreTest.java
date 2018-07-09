@@ -61,6 +61,13 @@ public class DbStoreTest {
     }
 
     @Test
+    public void ifFindByLoginThenReturnUserWithSameLogin() {
+        this.testStore.add(this.first);
+        String result = this.testStore.findByLogin(this.first.getLogin()).getName();
+        assertThat(result, is(this.first.getName()));
+    }
+
+    @Test
     public void add() throws SQLException {
         this.testStore.add(this.first);
         try (Statement st = this.connect.createStatement();

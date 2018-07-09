@@ -42,16 +42,11 @@ public class AuthServlet extends HttpServlet {
             if (action.equals("signin")) {
                 String login = req.getParameter("login");
                 String password = req.getParameter("password");
-                boolean isLogged = false;
-                for (User usr : this.validator.findAll()) {
-                    if (usr.getLogin().equals(login) && usr.getPassword().equals(password)) {
-                        req.getSession().setAttribute("loginRole", new LoginRole(usr));
-                        isLogged = true;
-                        resp.sendRedirect(String.format("%s/list", req.getContextPath()));
-                        break;
-                    }
-                }
-                if (!isLogged) {
+                User foundUser = this.validator.findByLogin(login);
+                if (foundUser != null && foundUser.getPassword().equals(password)) {
+                    req.getSession().setAttribute("loginRole", new LoginRole(foundUser));
+                    resp.sendRedirect(String.format("%s/list", req.getContextPath()));
+                } else {
                     req.setAttribute("error", "Invalid login or password");
                     req.getRequestDispatcher("/WEB-INF/views/auth.jsp").forward(req, resp);
                 }

@@ -39,16 +39,8 @@ public class ValidateService {
      */
     public boolean add(final User newUser) {
         boolean done = false;
-        if (checkUser(newUser)) {
+        if (checkUser(newUser) && this.findByLogin(newUser.getLogin()) == null) {
             done = true;
-            for (User checkedUser : this.findAll()) {
-                if (checkedUser.getLogin().equals(newUser.getLogin())) {
-                    done = false;
-                    break;
-                }
-            }
-        }
-        if (done) {
             Calendar currentDate = new GregorianCalendar();
             currentDate.setTime(new Date());
             newUser.setCreateDate(currentDate);
@@ -113,5 +105,14 @@ public class ValidateService {
      */
     public User findById(final int id) {
         return this.store.findById(id);
+    }
+
+    /**
+     * Ищет пользователя по логину.
+     * @param login логин искомого пользователя.
+     * @return найденный пользователь.
+     */
+    public User findByLogin(final String login) {
+        return this.store.findByLogin(login);
     }
 }

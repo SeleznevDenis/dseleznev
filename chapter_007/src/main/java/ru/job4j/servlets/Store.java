@@ -38,4 +38,11 @@ public interface Store {
      * @return найденный пользователь.
      */
     User findById(int id);
+
+    /**
+     * Ищет пользователя по логину.
+     * @param login логин искомого пользователя.
+     * @return найденный пользователь.
+     */
+    User findByLogin(String login);
 }

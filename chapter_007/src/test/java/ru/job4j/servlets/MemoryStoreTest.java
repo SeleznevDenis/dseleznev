@@ -29,12 +29,20 @@ public class MemoryStoreTest {
         this.firstTestUser = new User();
         this.secondTestUser = new User();
         this.firstTestUser.setName("first");
+        this.firstTestUser.setLogin("first");
+        this.secondTestUser.setLogin("second");
         this.secondTestUser.setName("second");
     }
     @After
     public void clearTestStore() {
         this.testStore.delete(this.firstTestUser.getId());
         this.testStore.delete(this.secondTestUser.getId());
+    }
+
+    @Test
+    public void ifFindByLoginThenStorageShouldBeReturnUserWithGivenLogin() {
+        this.testStore.add(this.firstTestUser);
+        assertThat(this.testStore.findByLogin(this.firstTestUser.getLogin()), is(this.firstTestUser));
     }
 
     @Test
