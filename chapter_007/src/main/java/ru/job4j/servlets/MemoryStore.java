@@ -61,8 +61,10 @@ public class MemoryStore implements Store {
     @Override
     public void update(final User newUser) {
         User replacedUser = this.userStorage.replace(newUser.getId(), newUser);
-        this.loginId.remove(replacedUser.getLogin());
-        this.loginId.put(newUser.getLogin(), newUser.getId());
+        if (!newUser.getLogin().equals(replacedUser.getLogin())) {
+            this.loginId.remove(replacedUser.getLogin());
+            this.loginId.put(newUser.getLogin(), newUser.getId());
+        }
     }
 
     /**

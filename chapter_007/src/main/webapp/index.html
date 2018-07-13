@@ -40,6 +40,48 @@
             }
             return false;
         }
+        $(
+            getJson()
+        );
+        function getJson() {
+            $.ajax('./json', {
+                type: 'GET',
+                complete: function(data) {
+                    var users = JSON.parse(data.responseText);
+                    var result = "";
+                    if (data.responseText !== undefined) {
+                        for (var i=0; i !== users.length; ++i) {
+                            result += "<tr>" +
+                                "        <td>" + users[i].firstName + "  </td>" +
+                                "        <td>" + users[i].lastName + "   </td>" +
+                                "        <td>" + users[i].sex + "        </td>" +
+                                "        <td>" + users[i].description + "</td>" +
+                                "      </tr>";
+                        }
+                        var table = document.getElementById("tableBody");
+                        table.innerHTML = result;
+                    }
+                }
+            })
+        }
+
+        function sendJson() {
+            if (validate() === true) {
+                $.ajax('./json', {
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({'firstName':$('#firstname').val(),
+                        'lastName':$('#lastname').val(),
+                        'description':$('#textarea').val(),
+                        'sex':$('input[name=sex]:checked').val()
+                    }),
+                    complete: function() {
+                        getJson();
+                    }
+                })
+            }
+            return false;
+        }
     </script>
     <style>
         body {
@@ -54,7 +96,7 @@
 <div class="container-fluid">
     <h1>User registration</h1>
     <p>Here you can register on the server.</p>
-    <form action="/action_page.php">
+    <form>
         <div class="form-group">
             <label for="firstname">First name:</label>
             <input type="text" class="form-control" title="Enter First name" id="firstname">
@@ -75,8 +117,8 @@
             <label for="textarea">Description:</label>
             <textarea class="form-control rounded-0" title="Enter description" id="textarea" rows="4"></textarea>
         </div>
-        <button type="submit" class="btn btn-default" onclick="return validate()">Submit</button>
-        <button type="button" class="btn btn-default" onclick="addRow()">Add user</button>
+        <button type="button" class="btn btn-default" onclick="return sendJson()">Submit</button>
+        <button type="button" class="btn btn-default" onclick="return addRow()">Add user</button>
     </form>
     <h2>Users</h2>
     <p>All users registered on the server:</p>
@@ -89,25 +131,8 @@
             <th>description</th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>male</td>
-            <td>test description</td>
-        </tr>
-        <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>female</td>
-            <td>test description</td>
-        </tr>
-        <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>female</td>
-            <td>test description</td>
-        </tr>
+        <tbody id="tableBody">
+
         </tbody>
     </table>
 </div>
