@@ -29,7 +29,7 @@ public class JsonController extends HttpServlet {
     /**
      * Хранилище пользователей.
      */
-    private static final Map<Integer, SimpleUser> STORE = new ConcurrentHashMap<>();
+    private static final Map<Integer, UserDTO> STORE = new ConcurrentHashMap<>();
 
     /**
      * Потокобезопасный счетчик.
@@ -63,7 +63,7 @@ public class JsonController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
             String json = req.getReader().lines().collect(Collectors.joining());
-            SimpleUser result = CONVERTER.readValue(json, SimpleUser.class);
+            UserDTO result = CONVERTER.readValue(json, UserDTO.class);
             STORE.put(COUNTER.incrementAndGet(), result);
             LOG.info(json + " загружены в базу");
         } catch (IOException e) {
@@ -71,58 +71,5 @@ public class JsonController extends HttpServlet {
         }
     }
 
-    /**
-     * Модель данных для JSON конвертера.
-     * @author Denis Seleznev
-     * @version $Id$
-     * @since 0.1
-     */
-    public static class SimpleUser {
-        private String firstName;
-        private String lastName;
-        private String description;
-        private String sex;
 
-        public SimpleUser() {
-        }
-
-        public SimpleUser(String firstName, String lastName, String sex, String description) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.sex = sex;
-            this.description = description;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getSex() {
-            return sex;
-        }
-
-        public void setSex(String sex) {
-            this.sex = sex;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-    }
 }
