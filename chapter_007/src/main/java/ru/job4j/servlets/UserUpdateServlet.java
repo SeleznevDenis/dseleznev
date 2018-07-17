@@ -55,6 +55,8 @@ public class UserUpdateServlet extends HttpServlet {
                 req.getParameter("role"),
                 req.getParameter("password")
         );
+        updatedUser.setCity(req.getParameter("city"));
+        updatedUser.setCountry(req.getParameter("country"));
         updatedUser.setId(Integer.parseInt(req.getParameter("id")));
         String message = "";
         String error = "";

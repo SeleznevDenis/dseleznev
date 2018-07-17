@@ -15,7 +15,7 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-public class DbStore implements Store {
+public class DbStore implements Store, UserAddressStore {
     private static final Logger LOG = LogManager.getLogger("servlets");
 
     /**
@@ -57,6 +57,10 @@ public class DbStore implements Store {
     private static void createTableAndRootUser() {
         try (Connection connect = SOURCE.getConnection();
              Statement st = connect.createStatement()) {
+            st.execute(PROPS.getProperty("createCountry"));
+            st.execute(PROPS.getProperty("fillCountries"));
+            st.execute(PROPS.getProperty("createCity"));
+            st.execute(PROPS.getProperty("fillCities"));
             st.execute(PROPS.getProperty("createTable"));
             st.execute(PROPS.getProperty("insertRoot"));
             st.execute(PROPS.getProperty("createIndex"));
@@ -121,6 +125,7 @@ public class DbStore implements Store {
             st.setTimestamp(4, new Timestamp(user.getCreateDate().getTimeInMillis()));
             st.setString(5, user.getPassword());
             st.setString(6, user.getRole());
+            st.setString(7, user.getCity());
             st.execute();
         } catch (SQLException e) {
             LOG.error(e.getMessage(), e);
@@ -142,7 +147,8 @@ public class DbStore implements Store {
             st.setString(3, newUser.getEmail());
             st.setString(4, newUser.getPassword());
             st.setString(5, newUser.getRole());
-            st.setInt(6, newUser.getId());
+            st.setString(6, newUser.getCity());
+            st.setInt(7, newUser.getId());
             st.execute();
         } catch (SQLException e) {
             LOG.error(e.getMessage(), e);
@@ -185,6 +191,8 @@ public class DbStore implements Store {
         usr.setCreateDate(createDate);
         usr.setPassword(rst.getString("password"));
         usr.setRole(rst.getString("role"));
+        usr.setCity(rst.getString("city"));
+        usr.setCountry(rst.getString("country"));
         return usr;
     }
 
@@ -226,5 +234,35 @@ public class DbStore implements Store {
             LOG.error(e.getMessage(), e);
         }
         return user;
+    }
+
+    public List<String> findAllCountries() {
+        List<String> resultList = new ArrayList<>();
+        try (Connection con = SOURCE.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rst = st.executeQuery(PROPS.getProperty("getAllCountries"))) {
+            while (rst.next()) {
+                resultList.add(rst.getString("name"));
+            }
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return resultList;
+    }
+
+    public List<String> findCitiesByCountry(String name) {
+        List<String> resultList = new ArrayList<>();
+        try (Connection con = SOURCE.getConnection();
+             PreparedStatement st = con.prepareStatement(PROPS.getProperty("getCitiesByCountry"))) {
+            st.setString(1, name);
+            try (ResultSet rstSet = st.executeQuery()) {
+                while (rstSet.next()) {
+                    resultList.add(rstSet.getString("name"));
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return resultList;
     }
 }

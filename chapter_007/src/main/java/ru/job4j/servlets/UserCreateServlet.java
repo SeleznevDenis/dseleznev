@@ -46,9 +46,14 @@ public class UserCreateServlet extends HttpServlet {
         String email = req.getParameter("email");
         String role = req.getParameter("role");
         String password = req.getParameter("password");
+        String country = req.getParameter("country");
+        String city = req.getParameter("city");
         String message = "";
         String error = "";
-        if (this.validator.add(new User(name, login, email, role, password))) {
+        User newUser = new User(name, login, email, role, password);
+        newUser.setCountry(country);
+        newUser.setCity(city);
+        if (this.validator.add(newUser)) {
             message = "User was added";
         } else {
             error = "Incorrect input data, please try again.";

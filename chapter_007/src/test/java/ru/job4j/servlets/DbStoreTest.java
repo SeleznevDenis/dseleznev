@@ -149,4 +149,16 @@ public class DbStoreTest {
         }
         assertThat(this.testStore.findById(this.first.getId()), is(this.first));
     }
+
+    @Test
+    public void findAllCountriesTest() {
+        assertTrue(this.testStore.findAllCountries().containsAll(asList("Russia", "USA")));
+    }
+
+    @Test
+    public void findCitiesByCountry() {
+        assertTrue(this.testStore.findCitiesByCountry("Russia").containsAll(
+                asList("Moscow", "Saint Petersburg", "Ekaterinburg"))
+        );
+    }
 }
