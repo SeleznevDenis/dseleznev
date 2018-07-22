@@ -38,7 +38,10 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpSession session = request.getSession();
         try {
-            if (!request.getRequestURI().contains("/signin") && session.getAttribute("loginRole") == null) {
+            if (!request.getRequestURI().contains("/css/")
+                    && !request.getRequestURI().contains("/js/")
+                    && !request.getRequestURI().contains("/signin")
+                    && session.getAttribute("loginRole") == null) {
                 ((HttpServletResponse) resp).sendRedirect(String.format("%s/signin", request.getContextPath()));
             } else {
                 chain.doFilter(req, resp);
