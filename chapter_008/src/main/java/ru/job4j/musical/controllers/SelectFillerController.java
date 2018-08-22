@@ -19,24 +19,9 @@ import java.io.PrintWriter;
  * @since 0.1
  */
 public class SelectFillerController extends HttpServlet {
-    /**
-     * LOG4J Логгер.
-     */
     private static final Logger LOG = LogManager.getLogger("servlets");
-
-    /**
-     * Хранилище музыкальных типов.
-     */
     private static final MusicTypeStore MUSIC_TYPE_STORE = new MusicTypeStore();
-
-    /**
-     * Хранилище ролей.
-     */
     private static final RoleStore ROLE_STORE = new RoleStore();
-
-    /**
-     * JSON конвертер.
-     */
     private static final ObjectMapper CONVERTER = new ObjectMapper();
 
     /**

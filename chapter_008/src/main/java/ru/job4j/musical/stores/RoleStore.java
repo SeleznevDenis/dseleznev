@@ -18,9 +18,6 @@ import java.util.Properties;
  * @since 0.1
  */
 public class RoleStore {
-    /**
-     * LOG4j логгер.
-     */
     private static final Logger LOG = LogManager.getLogger("servlets");
 
     /**
@@ -32,10 +29,6 @@ public class RoleStore {
      * Подготовленные запросы к БД.
      */
     private static final Properties QUERIES = CON.getQueries();
-
-    /**
-     * Хранилище пользователей.
-     */
     private static final UserStore USER_STORE = new UserStore();
 
     /**
@@ -110,15 +103,12 @@ public class RoleStore {
      */
     public boolean delete(int id) {
         boolean done = false;
-        if (this.findById(id) != null) {
-            try (Connection connect = CON.getConnect();
-                 PreparedStatement st = connect.prepareStatement(QUERIES.getProperty("deleteRole"))) {
-                st.setInt(1, id);
-                st.execute();
-                done = true;
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            }
+        try (Connection connect = CON.getConnect();
+             PreparedStatement st = connect.prepareStatement(QUERIES.getProperty("deleteRole"))) {
+            st.setInt(1, id);
+            done = st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
         }
         return done;
     }
@@ -131,17 +121,14 @@ public class RoleStore {
      */
     public boolean update(int id, Role role) {
         boolean done = false;
-        if (this.findById(id) != null) {
             try (Connection connect = CON.getConnect();
                  PreparedStatement st = connect.prepareStatement(QUERIES.getProperty("updateRole"))) {
                 st.setString(1, role.getRole());
                 st.setInt(2, id);
-                st.execute();
-                done = true;
+                done = st.executeUpdate() > 0;
             } catch (SQLException e) {
                 LOG.error(e.getMessage(), e);
             }
-        }
         return done;
     }
 

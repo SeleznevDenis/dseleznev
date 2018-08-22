@@ -22,19 +22,12 @@ import java.io.PrintWriter;
  * @since 0.1
  */
 public class AuthController extends HttpServlet {
-    /**
-     * LOG4j логгер.
-     */
     private static final Logger LOG = LogManager.getLogger("servlets");
 
     /**
      * Хранилище пользователей.
      */
     private static final UserStore USER_STORE = new UserStore();
-
-    /**
-     * JSON конвертер.
-     */
     private static final ObjectMapper CONVERTER = new ObjectMapper();
 
     /**

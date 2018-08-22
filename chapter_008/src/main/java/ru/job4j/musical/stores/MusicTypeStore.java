@@ -17,9 +17,6 @@ import java.util.Properties;
  * @since 0.1
  */
 public class MusicTypeStore {
-    /**
-     * LOG4J логгер.
-     */
     private static final Logger LOG = LogManager.getLogger("servlets");
 
     /**
@@ -124,15 +121,12 @@ public class MusicTypeStore {
      */
     public boolean delete(int id) {
         boolean result = false;
-        if (this.findById(id) != null) {
-            try (Connection connect = CON.getConnect();
-                 PreparedStatement st = connect.prepareStatement(QUERIES.getProperty("deleteType"))) {
-                st.setInt(1, id);
-                st.execute();
-                result = true;
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            }
+        try (Connection connect = CON.getConnect();
+             PreparedStatement st = connect.prepareStatement(QUERIES.getProperty("deleteType"))) {
+            st.setInt(1, id);
+            result = st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage(), e);
         }
         return result;
     }
@@ -145,13 +139,12 @@ public class MusicTypeStore {
      */
     public boolean update(int id, MusicType type) {
         boolean result = false;
-        if (type != null && this.findById(id) != null) {
+        if (type != null) {
             try (Connection connect = CON.getConnect();
                  PreparedStatement st = connect.prepareStatement(QUERIES.getProperty("updateType"))) {
                 st.setString(1, type.getType());
                 st.setInt(2, id);
-                st.execute();
-                result = true;
+                result = st.executeUpdate() > 0;
             } catch (SQLException e) {
                 LOG.error(e.getMessage(), e);
             }

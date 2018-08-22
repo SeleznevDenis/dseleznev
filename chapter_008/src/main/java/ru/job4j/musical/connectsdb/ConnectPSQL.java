@@ -18,19 +18,9 @@ import java.util.Properties;
  * @since 0.1
  */
 public class ConnectPSQL {
-    /**
-     * LOG4J Логгер.
-     */
+
     private static final Logger LOG = LogManager.getLogger("servlets");
-
-    /**
-     * Пул коннектов.
-     */
     private static final BasicDataSource SOURCE = new BasicDataSource();
-
-    /**
-     * Инстанс класса.
-     */
     private static final ConnectPSQL INSTANCE = new ConnectPSQL();
 
     /**

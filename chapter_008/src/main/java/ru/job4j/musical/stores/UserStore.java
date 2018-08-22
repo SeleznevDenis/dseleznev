@@ -23,9 +23,6 @@ import java.util.Properties;
  * @since 0.1
  */
 public class UserStore {
-    /**
-     * LOG4j logger.
-     */
     private static final Logger LOG = LogManager.getLogger("servlets");
 
     /**
@@ -37,20 +34,8 @@ public class UserStore {
      * Запросы к базе данных.
      */
     private static final Properties QUERIES = CON.getQueries();
-
-    /**
-     * Хранилище пользователей.
-     */
     private static final RoleStore ROLE_STORE = new RoleStore();
-
-    /**
-     * Хранилище адресов.
-     */
     private static final AddressStore ADDRESS_STORE = new AddressStore();
-
-    /**
-     * Хранилище музыкальных типов.
-     */
     private static final MusicTypeStore TYPE_STORE = new MusicTypeStore();
 
     /**
@@ -281,14 +266,12 @@ public class UserStore {
      */
     public boolean delete(int id) {
         boolean done = false;
-        if (ADDRESS_STORE.findById(id) != null) {
-            ADDRESS_STORE.delete(id);
+        if (ADDRESS_STORE.delete(id)) {
             try (Connection con = CON.getConnect()) {
                 this.deleteUserType(con, id);
                 try (PreparedStatement st2 = con.prepareStatement(QUERIES.getProperty("deleteUser"))) {
                     st2.setInt(1, id);
-                    st2.execute();
-                    done = true;
+                    done = st2.executeUpdate() > 0;
                 }
             } catch (SQLException e) {
                 LOG.error(e.getMessage(), e);
@@ -305,8 +288,7 @@ public class UserStore {
      */
     public boolean update(int id, User user) {
         boolean done = false;
-        if (ADDRESS_STORE.findById(id) != null) {
-            ADDRESS_STORE.update(id, user.getAddress());
+        if (ADDRESS_STORE.update(id, user.getAddress())) {
             try (Connection con = CON.getConnect();
             PreparedStatement upUsr = con.prepareStatement(QUERIES.getProperty("updateUser"))) {
                 upUsr.setInt(1, ROLE_STORE.findRoleId(user.getRole()));
