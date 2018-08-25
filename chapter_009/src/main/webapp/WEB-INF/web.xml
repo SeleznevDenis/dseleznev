@@ -1,0 +1,18 @@
+<web-app>
+    <servlet>
+        <servlet-name>TasksController</servlet-name>
+        <servlet-class>ru.job4j.controllers.TasksController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TasksController</servlet-name>\
+        <url-pattern>/tasks</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateController</servlet-name>
+        <servlet-class>ru.job4j.controllers.UpdateController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateController</servlet-name>
+        <url-pattern>/update</url-pattern>
+    </servlet-mapping>
+</web-app>

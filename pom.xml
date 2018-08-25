@@ -22,6 +22,7 @@
         <module>chapter_006</module>
         <module>chapter_007</module>
         <module>chapter_008</module>
+        <module>chapter_009</module>
     </modules>
 	
 	<dependencies>
@@ -111,6 +112,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-agroal</artifactId>
+            <version>5.3.5.Final</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 	<build>
