@@ -1,11 +1,14 @@
 package ru.job4j.stores;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import ru.job4j.models.Task;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Task Store.
@@ -14,6 +17,7 @@ import java.util.List;
  * @since 0.1
  */
 public class TaskStore {
+    private static final Logger LOG = LogManager.getLogger("servlets");
     private static final SessionFactory FACTORY = DBSessionFactory.getSessionFactory();
 
     /**
@@ -23,17 +27,39 @@ public class TaskStore {
         FACTORY.close();
     }
 
+
     /**
-     * Добавляет задачу в базу данных.
-     * @param task задача для добавления.
+     * Удаляет задачу из базы данных по идентификатору.
+     * @param id идентификатор задачи.
      */
-    public void add(Task task) {
-        Session session = FACTORY.openSession();
-        Transaction transaction = session.beginTransaction();
+    public boolean delete(final int id) {
+         return this.tx(
+                session -> {
+                    boolean result = false;
+                    if (this.findById(id) != null) {
+                        session.delete(new Task(id));
+                        result = true;
+                    }
+                    return result;
+                }
+        );
+    }
+
+    /**
+     * Обёртка транзакций.
+     * @param command функция содержащая действия во время транзацкии.
+     * @param <T> Параметрический тип возвращаемого значения функции.
+     * @return результат работы функции
+     */
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = FACTORY.openSession();
+        final Transaction transaction = session.beginTransaction();
         try {
-            session.save(task);
-        } catch (Exception e) {
-            transaction.rollback();
+            return command.apply(session);
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
+            throw e;
         } finally {
             transaction.commit();
             session.close();
@@ -41,20 +67,14 @@ public class TaskStore {
     }
 
     /**
-     * Удаляет задачу из базы данных по идентификатору.
-     * @param id идентификатор задачи.
+     * Добавляет задачу в базу данных.
+     * @param task задача для добавления.
      */
-    public void delete(int id) {
-        Session session = FACTORY.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            session.delete(new Task(id));
-        } catch (Exception e) {
-            transaction.rollback();
-        } finally {
-            transaction.commit();
-            session.close();
-        }
+    public void add(Task task) {
+        this.tx(session -> {
+            session.save(task);
+            return null;
+        });
     }
 
     /**
@@ -62,34 +82,17 @@ public class TaskStore {
      * @param task данные для обновления.
      */
     public void update(Task task) {
-        Session session = FACTORY.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+        this.tx(session -> {
             session.update(task);
-        } catch (Exception e) {
-            transaction.rollback();
-        } finally {
-            transaction.commit();
-            session.close();
-        }
+            return null;
+        });
     }
 
     /**
      * @return все задачи из базы данных.
      */
     public List<Task> findAll() {
-        Session session = FACTORY.openSession();
-        Transaction transaction = session.beginTransaction();
-        List<Task> result = null;
-        try {
-            result = session.createQuery("from Task", Task.class).list();
-        } catch (Exception e) {
-            transaction.rollback();
-        } finally {
-            transaction.commit();
-            session.close();
-        }
-        return result;
+        return this.tx(session -> session.createQuery("from Task", Task.class).list());
     }
 
     /**
@@ -98,17 +101,6 @@ public class TaskStore {
      * @return найденная задача.
      */
     public Task findById(int id) {
-        Task result = null;
-        Session session = FACTORY.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            result = session.get(Task.class, id);
-        } catch (Exception e) {
-            transaction.rollback();
-        } finally {
-            transaction.commit();
-            session.close();
-        }
-        return result;
+        return this.tx(session -> session.get(Task.class, id));
     }
 }

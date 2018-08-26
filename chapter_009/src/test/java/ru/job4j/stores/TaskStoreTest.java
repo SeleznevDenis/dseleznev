@@ -73,7 +73,8 @@ public class TaskStoreTest {
     public void delete() {
         this.test.add(this.first);
         int taskId = this.findTaskId(this.first);
-        this.test.delete(taskId);
+        assertTrue(this.test.delete(taskId));
+        assertFalse(this.test.delete(taskId));
         assertFalse(this.test.findAll().contains(this.first));
     }
 }
