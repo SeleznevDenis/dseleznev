@@ -17,44 +17,41 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 @ThreadSafe
 public class DBSessionFactory {
     private static final Logger LOG = LogManager.getLogger("servlets");
-    private static SessionFactory factory;
+    private static final SessionFactory FACTORY;
+    private static final StandardServiceRegistry REGISTRY;
 
     static {
-        init();
+        REGISTRY = new StandardServiceRegistryBuilder().configure().build();
+        try {
+            FACTORY = new MetadataSources(REGISTRY).buildMetadata().buildSessionFactory();
+        } catch (Exception e) {
+            StandardServiceRegistryBuilder.destroy(REGISTRY);
+            LOG.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     private DBSessionFactory() {
     }
 
     /**
-     * Инициализирует session factory.
-     */
-    private static void init() {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-        try {
-            factory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        } catch (Exception e) {
-            StandardServiceRegistryBuilder.destroy(registry);
-            LOG.error(e.getMessage(), e);
-        }
-    }
-
-    /**
      * Закрывает Session Factory.
      */
-    public static synchronized void close() {
-        if (factory != null) {
-            factory.close();
+    public static void close() {
+        if (!FACTORY.isClosed()) {
+            try {
+                StandardServiceRegistryBuilder.destroy(REGISTRY);
+                FACTORY.close();
+            } catch (IllegalStateException e) {
+                LOG.error(e.getMessage(), e);
+            }
         }
     }
 
     /**
      * @return Session Factory.
      */
-    public static synchronized SessionFactory getSessionFactory() {
-        if (factory == null) {
-            init();
-        }
-        return factory;
+    public static SessionFactory getSessionFactory() {
+        return FACTORY;
     }
 }

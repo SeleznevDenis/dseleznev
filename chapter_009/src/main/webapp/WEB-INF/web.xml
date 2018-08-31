@@ -1,4 +1,7 @@
 <web-app>
+    <listener>
+        <listener-class>ru.job4j.listeners.ContextListener</listener-class>
+    </listener>
     <servlet>
         <servlet-name>TasksController</servlet-name>
         <servlet-class>ru.job4j.controllers.TasksController</servlet-class>

@@ -49,12 +49,4 @@ public class TasksController extends HttpServlet {
             LOG.error(e.getMessage(), e);
         }
     }
-
-    /**
-     * Закрывает Session Factory.
-     */
-    @Override
-    public void destroy() {
-        STORE.close();
-    }
 }
