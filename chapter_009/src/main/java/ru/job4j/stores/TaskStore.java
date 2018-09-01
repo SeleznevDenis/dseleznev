@@ -21,28 +21,23 @@ public class TaskStore {
     private static final SessionFactory FACTORY = DBSessionFactory.getSessionFactory();
 
     /**
-     * Закрывает Session Factory.
-     */
-    public void close() {
-        FACTORY.close();
-    }
-
-
-    /**
      * Удаляет задачу из базы данных по идентификатору.
      * @param id идентификатор задачи.
      */
     public boolean delete(final int id) {
-         return this.tx(
-                session -> {
-                    boolean result = false;
-                    if (this.findById(id) != null) {
+        boolean result = false;
+        try {
+            this.tx(
+                    session -> {
                         session.delete(new Task(id));
-                        result = true;
+                        return null;
                     }
-                    return result;
-                }
-        );
+            );
+            result = true;
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return result;
     }
 
     /**
@@ -54,16 +49,18 @@ public class TaskStore {
     private <T> T tx(final Function<Session, T> command) {
         final Session session = FACTORY.openSession();
         final Transaction transaction = session.beginTransaction();
+        T result = null;
         try {
-            return command.apply(session);
+            result = command.apply(session);
+            transaction.commit();
         } catch (final Exception e) {
             session.getTransaction().rollback();
             LOG.error(e.getMessage(), e);
             throw e;
         } finally {
-            transaction.commit();
             session.close();
         }
+        return result;
     }
 
     /**
