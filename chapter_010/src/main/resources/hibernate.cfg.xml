@@ -1,0 +1,29 @@
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">
+            jdbc:postgresql://localhost:5432/tracker
+        </property>
+        <property name="connection.driver_class">
+            org.postgresql.Driver
+        </property>
+        <property name="connection.username">
+            postgres
+        </property>
+        <property name="connection.password">
+            password
+        </property>
+        <property name="dialect">
+            org.hibernate.dialect.PostgreSQL95Dialect
+        </property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="show_sql">true</property>
+        <mapping resource="ru/job4j/models/Engine.hbm.xml"/>
+        <mapping resource="ru/job4j/models/GearBox.hbm.xml"/>
+        <mapping resource="ru/job4j/models/Machine.hbm.xml"/>
+        <mapping resource="ru/job4j/models/Transmission.hbm.xml"/>
+        <mapping class="ru.job4j.annotationmodels.AEngine"/>
+        <mapping class="ru.job4j.annotationmodels.AGearBox"/>
+        <mapping class="ru.job4j.annotationmodels.ATransmission"/>
+        <mapping class="ru.job4j.annotationmodels.AMachine"/>
+    </session-factory>
+</hibernate-configuration>

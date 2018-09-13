@@ -1,0 +1,8 @@
+<hibernate-mapping>
+    <class name="ru.job4j.models.GearBox" table="gear_box">
+        <id name="id" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="description" column="description"/>
+    </class>
+</hibernate-mapping>
