@@ -1,7 +1,5 @@
 <web-app>
-    <listener>
-        <listener-class>ru.job4j.listeners.ContextListener</listener-class>
-    </listener>
+
     <servlet>
         <servlet-name>TasksController</servlet-name>
         <servlet-class>ru.job4j.controllers.TasksController</servlet-class>
@@ -18,4 +16,7 @@
         <servlet-name>UpdateController</servlet-name>
         <url-pattern>/update</url-pattern>
     </servlet-mapping>
+    <listener>
+        <listener-class>ru.job4j.listeners.ContextListener</listener-class>
+    </listener>
 </web-app>

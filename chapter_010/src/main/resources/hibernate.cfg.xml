@@ -17,13 +17,23 @@
         </property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
-        <mapping resource="ru/job4j/models/Engine.hbm.xml"/>
-        <mapping resource="ru/job4j/models/GearBox.hbm.xml"/>
-        <mapping resource="ru/job4j/models/Machine.hbm.xml"/>
-        <mapping resource="ru/job4j/models/Transmission.hbm.xml"/>
-        <mapping class="ru.job4j.annotationmodels.AEngine"/>
-        <mapping class="ru.job4j.annotationmodels.AGearBox"/>
-        <mapping class="ru.job4j.annotationmodels.ATransmission"/>
-        <mapping class="ru.job4j.annotationmodels.AMachine"/>
+        <mapping resource="ru/job4j/annotationstest/models/MEngine.hbm.xml"/>
+        <mapping resource="ru/job4j/annotationstest/models/GearBox.hbm.xml"/>
+        <mapping resource="ru/job4j/annotationstest/models/Machine.hbm.xml"/>
+        <mapping resource="ru/job4j/annotationstest/models/MTransmission.hbm.xml"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.AEngine"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.AGearBox"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.ATransmission"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.AMachine"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Transmission"/>
+        <mapping class="ru.job4j.carplace.persistens.models.DriveUnit"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Advert"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Brand"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Color"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Engine"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Model"/>
+        <mapping class="ru.job4j.carplace.persistens.models.User"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Wheel"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Body"/>
     </session-factory>
 </hibernate-configuration>

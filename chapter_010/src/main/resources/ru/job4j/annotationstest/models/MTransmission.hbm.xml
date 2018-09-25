@@ -1,0 +1,8 @@
+<hibernate-mapping>
+<class name="ru.job4j.annotationstest.models.MTransmission" table="MTransmission">
+    <id name="id" column="id">
+        <generator class="identity"/>
+    </id>
+    <property name="description" column="description"/>
+</class>
+</hibernate-mapping>
