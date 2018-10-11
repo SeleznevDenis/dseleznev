@@ -12,6 +12,7 @@ $(
 function fillForms() {
     fillAdvertForm();
     fillModels();
+    fillFilterForm()
 }
 
 
@@ -33,9 +34,26 @@ const htmlGen = {
         "</form>"
 };
 
-function fillAdverts() {
+
+
+function fillAdverts(withFilter) {
+    var filterData = "";
+    if (withFilter) {
+        filterData = {
+            action: "filter",
+            filter: JSON.stringify(
+                {
+                    startDate: $('#dateStart').val(),
+                    finishDate: $('#dateFinish').val(),
+                    brand: {id :$('#autoBrandFilter').val()},
+                    withPhoto: document.getElementById("checkBoxWithPhoto").checked
+                }
+            )
+        };
+    }
     $.ajax('./advert', {
         type: 'GET',
+        data: filterData,
         complete: function(data) {
             var adverts = JSON.parse(data.responseText);
             var result = "";
@@ -76,10 +94,8 @@ function fillAdverts() {
                     "    </div>" +
                     "  </div>" +
                     "</div>";
-
             }
             document.getElementById("advertsShow").innerHTML = result;
-
         }
     })
 
@@ -223,6 +239,19 @@ function fillAdvertForm() {
     })
 }
 
+function fillFilterForm() {
+    $.ajax('./fillAdvert', {
+        type: 'GET',
+        data: {
+            action: "filtersForm",
+        },
+        complete: function(data) {
+            var formDTO = JSON.parse(data.responseText);
+            fillSelect("autoBrandFilter", formDTO.brands);
+        }
+    })
+}
+
 function fillSelect(selectId, data) {
     //alert("inFillSelect");
     //alert(selectId);
@@ -235,7 +264,7 @@ function fillSelect(selectId, data) {
 }
 
 function fillModels() {
-    $.ajax('/fillAdvert', {
+    $.ajax('./fillAdvert', {
         type: 'POST',
         data: {"brandId" : $('#autoBrand').val()}, //$('#autoBrand').val()
         complete: function(data) {
@@ -243,6 +272,21 @@ function fillModels() {
             fillSelect("model", models);
         }
     })
+}
+function fillModelsFilter() {
+    $.ajax('./fillAdvert', {
+        type: 'POST',
+        data: {"brandId" : $('#autoBrandFilter').val()},
+        complete: function(data) {
+            var models = JSON.parse(data.responseText);
+            fillSelect("modelFilter", models);
+        }
+    })
+}
+function doFilter() {
+    alert('doFilter');
+    fillAdverts(true);
+
 }
 
 

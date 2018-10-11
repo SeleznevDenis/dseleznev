@@ -43,11 +43,14 @@ public class FillFormController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         AdvertFormDTO formDTO = new AdvertFormDTO();
         formDTO.setBrands(BRAND_DAO.findAll());
-        formDTO.setBodies(BODY_DAO.findAll());
-        formDTO.setDriveUnits(DRIVE_UNIT_DAO.findAll());
-        formDTO.setEngines(ENGINE_DAO.findAll());
-        formDTO.setTransmissions(TRANSMISSION_DAO.findAll());
-        formDTO.setWheels(WHEEL_DAO.findAll());
+        String action = req.getParameter("action");
+        if (action == null || !req.getParameter("action").equals("filtersForm")) {
+            formDTO.setBodies(BODY_DAO.findAll());
+            formDTO.setDriveUnits(DRIVE_UNIT_DAO.findAll());
+            formDTO.setEngines(ENGINE_DAO.findAll());
+            formDTO.setTransmissions(TRANSMISSION_DAO.findAll());
+            formDTO.setWheels(WHEEL_DAO.findAll());
+        }
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
         MAPPER.writeValue(writer, formDTO);

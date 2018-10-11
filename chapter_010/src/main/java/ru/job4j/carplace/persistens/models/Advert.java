@@ -25,6 +25,7 @@ public class Advert implements IEntity {
     private Timestamp releaseDate;
     private int mileage;
     private String photo;
+    private Timestamp advertDate;
 
     @ManyToOne
     @JoinColumn(name = "body_fk")
@@ -176,5 +177,13 @@ public class Advert implements IEntity {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public Timestamp getAdvertDate() {
+        return advertDate;
+    }
+
+    public void setAdvertDate(Timestamp advertDate) {
+        this.advertDate = advertDate;
     }
 }

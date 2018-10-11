@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.carplace.dto.AddAdvertDTO;
+import ru.job4j.carplace.dto.FilterDTO;
+import ru.job4j.carplace.persistens.dao.AdvertDAO;
 import ru.job4j.carplace.persistens.dao.CrudDAO;
 import ru.job4j.carplace.persistens.models.Advert;
 import ru.job4j.utils.SingletonSF;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Контроллер объявлений.
@@ -24,7 +27,7 @@ import java.io.PrintWriter;
 public class AdvertController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger("servlets");
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final CrudDAO<Advert> ADVERT_DAO = new CrudDAO<Advert>(SingletonSF.getSessionFactory()) { };
+    private static final AdvertDAO ADVERT_DAO = new AdvertDAO(SingletonSF.getSessionFactory());
 
     /**
      * Возвращает json содержащий все объявления.
@@ -33,7 +36,15 @@ public class AdvertController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
-        MAPPER.writeValue(writer, ADVERT_DAO.findAll());
+        String action = req.getParameter("action");
+        List<Advert> result = null;
+        if (action == null) {
+            result = ADVERT_DAO.findAll();
+        } else if (action.equals("filter")) {
+            FilterDTO filter = MAPPER.readValue(req.getParameter("filter"), FilterDTO.class);
+            result = ADVERT_DAO.findByFilter(filter);
+        }
+        MAPPER.writeValue(writer, result);
         writer.flush();
     }
 
