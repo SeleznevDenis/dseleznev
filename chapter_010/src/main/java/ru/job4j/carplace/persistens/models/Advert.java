@@ -4,6 +4,8 @@ import ru.job4j.carplace.persistens.interfaces.IEntity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Описывает объявление.
@@ -185,5 +187,37 @@ public class Advert implements IEntity {
 
     public void setAdvertDate(Timestamp advertDate) {
         this.advertDate = advertDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Advert advert = (Advert) o;
+        return id == advert.id
+                && engineValue == advert.engineValue
+                && cost == advert.cost
+                && mileage == advert.mileage
+                && Objects.equals(description, advert.description)
+                && Objects.equals(releaseDate, advert.releaseDate)
+                && Objects.equals(photo, advert.photo)
+                && Objects.equals(advertDate, advert.advertDate)
+                && Objects.equals(body, advert.body)
+                && Objects.equals(color, advert.color)
+                && Objects.equals(driveUnit, advert.driveUnit)
+                && Objects.equals(engine, advert.engine)
+                && Objects.equals(transmission, advert.transmission)
+                && Objects.equals(wheel, advert.wheel)
+                && Objects.equals(user, advert.user)
+                && Objects.equals(model, advert.model);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

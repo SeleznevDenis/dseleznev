@@ -3,6 +3,7 @@ package ru.job4j.carplace.dto;
 import ru.job4j.carplace.persistens.models.Brand;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  * Переносит данные фильтрации объявлений.

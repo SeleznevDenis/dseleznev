@@ -5,6 +5,7 @@ import ru.job4j.carplace.persistens.interfaces.IEntity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Описывает марку автомобиля.
@@ -48,5 +49,22 @@ public class Brand implements IEntity {
 
     public void setModels(List<Model> models) {
         this.models = models;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Brand brand = (Brand) o;
+        return Objects.equals(description, brand.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(description);
     }
 }

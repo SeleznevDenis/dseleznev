@@ -25,18 +25,20 @@ public class AdvertDAO extends CrudDAO<Advert> {
      */
     public List<Advert> findByFilter(FilterDTO filter) {
         System.out.println(filter);
+        System.out.println(filter.getBrand() == null);
         return this.getWrapper().wrapAndExecute(session ->
             session.createQuery(
-                    "from Advert AS a join fetch a.model AS m "
-                            + "join fetch a.body "
-                            + "join fetch a.driveUnit "
-                            + "join fetch a.engine "
-                            + "join fetch a.transmission "
-                            + "join fetch a.wheel "
-                            + "where ((:brandFilter = true or m.brand = :brand) "
-                            + "AND (:photoFilter = true or a.photo is not null) "
-                            + "AND (:dateStartFilter = true or a.advertDate > :dateStart) "
-                            + "AND (:dateFinishFilter = true or a.advertDate < :dateFinish))",
+                    "from Advert as a "
+                            + "left join fetch a.model AS m "
+                            + "left join fetch a.body "
+                            + "left join fetch a.driveUnit "
+                            + "left join fetch a.engine "
+                            + "left join fetch a.transmission "
+                            + "left join fetch a.wheel "
+                            + "where (:brandFilter = true or m.brand = :brand) AND"
+                            + "(:photoFilter = true or a.photo is not null) AND"
+                            + "(:dateStartFilter = true or a.advertDate > :dateStart) AND"
+                            + "(:dateFinishFilter = true or a.advertDate < :dateFinish)",
                     Advert.class
             ).setParameter("brandFilter", filter.getBrand() == null)
             .setParameter("brand", filter.getBrand())

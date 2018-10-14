@@ -1,0 +1,39 @@
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">
+            jdbc:hsqldb:mem:clinic;sql.enforce_size=false
+        </property>
+        <property name="connection.driver_class">
+            org.hsqldb.jdbcDriver
+        </property>
+        <property name="connection.username">
+            sa
+        </property>
+        <property name="connection.password">
+
+        </property>
+        <property name="dialect">
+            org.hibernate.dialect.HSQLDialect
+        </property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
+        <property name="show_sql">true</property>
+        <mapping resource="ru/job4j/annotationstest/models/MEngine.hbm.xml"/>
+        <mapping resource="ru/job4j/annotationstest/models/GearBox.hbm.xml"/>
+        <mapping resource="ru/job4j/annotationstest/models/Machine.hbm.xml"/>
+        <mapping resource="ru/job4j/annotationstest/models/MTransmission.hbm.xml"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.AEngine"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.AGearBox"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.ATransmission"/>
+        <mapping class="ru.job4j.annotationstest.annotationmodels.AMachine"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Transmission"/>
+        <mapping class="ru.job4j.carplace.persistens.models.DriveUnit"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Advert"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Brand"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Color"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Engine"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Model"/>
+        <mapping class="ru.job4j.carplace.persistens.models.User"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Wheel"/>
+        <mapping class="ru.job4j.carplace.persistens.models.Body"/>
+    </session-factory>
+</hibernate-configuration>
