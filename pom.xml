@@ -24,6 +24,7 @@
         <module>chapter_008</module>
         <module>chapter_009</module>
         <module>chapter_010</module>
+        <module>chapter_011</module>
     </modules>
 	
 	<dependencies>
@@ -65,12 +66,12 @@
             <version>1.7.25</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
             <version>1.8.0-alpha2</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -126,10 +127,26 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.liquibase/liquibase-maven-plugin -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-maven-plugin</artifactId>
+            <version>3.6.2</version>
+        </dependency>
+
 
     </dependencies>
 	<build>
+
     <plugins>
+
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
@@ -151,6 +168,7 @@
                     </execution>
                 </executions>
         </plugin>
+
         <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>

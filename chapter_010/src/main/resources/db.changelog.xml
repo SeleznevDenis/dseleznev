@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="denis" context="test ">
+        <insert tableName="advert">
+            <column name="cost">
+                22
+            </column>
+            <column name="description">
+                liquibase1
+            </column>
+            <column name="enginevalue">
+                0
+            </column>
+            <column name="mileage">
+                0
+            </column>
+        </insert>
+        <insert tableName="advert">
+            <column name="enginevalue">
+                0
+            </column>
+            <column name="mileage">
+                0
+            </column>
+            <column name="cost">
+                10
+            </column>
+            <column name="description">
+                liquibase
+            </column>
+            <column name="photo">
+                test
+            </column>
+            <column name="advertdate">
+                1000-11-11 05:00:00
+            </column>
+        </insert>
+        <!--<createTable tableName="department">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="boolean" defaultValueBoolean="true"/>
+        </createTable>-->
+    </changeSet>
+
+</databaseChangeLog>

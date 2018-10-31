@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @since 0.1
  */
 public interface IEntity extends Serializable {
-    public int getId();
+    int getId();
 
-    public void setId(int id);
+    void setId(int id);
 }

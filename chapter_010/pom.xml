@@ -11,6 +11,31 @@
     <artifactId>chapter_010</artifactId>
     <version>2.0</version>
     <packaging>war</packaging>
+    <!--<build>
+        <plugins>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>3.6.2</version>
+                <configuration>
+                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                    <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                &lt;!&ndash;<configuration>
+                    <propertyFileWillOverride>true</propertyFileWillOverride>
+                    <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                </configuration>&ndash;&gt;
+            </plugin>
+        </plugins>
+    </build>-->
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -41,7 +66,5 @@
             <version>2.4.1</version>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
 </project>
