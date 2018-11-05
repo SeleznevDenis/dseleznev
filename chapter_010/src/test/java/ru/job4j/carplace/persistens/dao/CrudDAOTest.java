@@ -18,7 +18,7 @@ import ru.job4j.annotationstest.annotationmodels.ATransmission;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class CRUDDAOTest {
+public class CrudDAOTest {
 
     private static final Logger LOGGER = LogManager.getLogger("servlets");
     private static final SessionFactory SF = SingletonSF.getSessionFactory();
