@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public abstract class CRUDDAOTest<T extends IEntity> {
+public abstract class CrudDAOTest<T extends IEntity> {
 
     protected abstract CrudDAO<T> getTestDao();
     protected abstract T getTestEntity();
