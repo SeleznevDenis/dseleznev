@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.core.Is.is;
 
 /**
  * User Storage Test.
@@ -14,6 +15,8 @@ import static org.junit.Assert.*;
  */
 public class UserStorageTest {
 
+    private ApplicationContext context = new ClassPathXmlApplicationContext("spring-context.xml");
+
     @Test
     public void add() {
         Storage memory = new MemoryStorage();
@@ -22,10 +25,25 @@ public class UserStorageTest {
     }
 
     @Test
-    public void whenLoadContextShouldGetBeans() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring-context.xml");
-        UserStorage memory = context.getBean(UserStorage.class);
+    public void whenLoadContextShouldGetUserStorageBean() {
+        UserStorage memory = this.context.getBean("storage", UserStorage.class);
         memory.add(new User());
         assertNotNull(memory);
+    }
+
+   @Test
+    public void whenLoadContextShouldGetJdbcStorageBean() {
+        UserStorage memory = this.context.getBean("jdbcStorage", UserStorage.class);
+        memory.add(new User());
+        assertNotNull(memory);
+    }
+
+    @Test
+    public void whenAddToMemoryThenMemoryShouldReturnAddedItemById() {
+        UserStorage memory = this.context.getBean("storage", UserStorage.class);
+        User usr = new User();
+        usr.setName("test");
+        int id = memory.add(usr);
+        assertThat(memory.findById(id).getName(), is(usr.getName()));
     }
 }

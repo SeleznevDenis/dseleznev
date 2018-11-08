@@ -8,12 +8,25 @@
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <!--<bean id="memory" class="ru.job4j.MemoryStorage"/>
+    <bean id="connectionFactory" class="ru.job4j.ConnectionFactory">
+        <constructor-arg name="propsName" type="java.lang.String" value="jdbc.properties"/>
+    </bean>
+
+    <bean id="jdbc" class="ru.job4j.JdbcStorage">
+        <constructor-arg ref="connectionFactory"/>
+    </bean>
+
+    <bean id="memory" class="ru.job4j.MemoryStorage"/>
+
     <bean id="storage" class="ru.job4j.UserStorage">
         <constructor-arg name="storage" ref="memory"/>
-    </bean>-->
+    </bean>
 
-    <context:component-scan base-package="ru.job4j"/>
+    <bean id="jdbcStorage" class="ru.job4j.UserStorage">
+        <constructor-arg name="storage" ref="jdbc"/>
+    </bean>
+
+    <!--<context:component-scan base-package="ru.job4j"/>-->
 
 
 

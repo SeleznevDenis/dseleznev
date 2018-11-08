@@ -1,6 +1,7 @@
 package ru.job4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,12 +10,11 @@ import org.springframework.stereotype.Component;
  * @version $Id$
  * @since 0.1
  */
-@Component
+
 public class UserStorage {
 
     private final Storage storage;
 
-    @Autowired
     public UserStorage(Storage storage) {
         this.storage = storage;
     }
@@ -23,7 +23,16 @@ public class UserStorage {
      * Добавляет user в хранилище
      * @param user объект для добавления.
      */
-    public void add(User user) {
-        this.storage.add(user);
+    public int add(User user) {
+        return this.storage.add(user);
+    }
+
+    /**
+     * Ищет юзера в хранилище.
+     * @param id идентификатор искомого юзера.
+     * @return искомый юзер.
+     */
+    public User findById(int id) {
+        return this.storage.findById(id);
     }
 }
