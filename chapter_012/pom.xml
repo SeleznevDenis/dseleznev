@@ -11,6 +11,17 @@
 
     <artifactId>chapter_012</artifactId>
     <packaging>war</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <dependency>
