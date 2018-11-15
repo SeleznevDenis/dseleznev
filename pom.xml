@@ -25,6 +25,7 @@
         <module>chapter_009</module>
         <module>chapter_010</module>
         <module>chapter_011</module>
+        <module>chapter_012</module>
     </modules>
 	
 	<dependencies>
@@ -103,12 +104,12 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.9.6</version>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
